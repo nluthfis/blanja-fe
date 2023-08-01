@@ -24,7 +24,7 @@ The Blanja project is built using the following technologies:
 ## Project Repository 📂🔗
 
 The backend repository for this project can be found on GitHub at the following link:
-[Blanja Backend Repository](https://github.com/IrhamNfrnda/blanja-be)
+[Blanja Backend Repository](https://github.com/nluthfis/blanja-fe)
 
 ## Features ✨🛍️👕👖
 
@@ -42,8 +42,16 @@ The backend repository for this project can be found on GitHub at the following 
 
 <table>
    <tr>
-    <td><img width="350px" src="./screenshot/home.png" border="0" alt="Login" /></td>
-    <td> <img width="350px" src="./screenshot/profile.png" border="0"  alt="Register" /></td>
+    <td><img width="350px" src="/documentation/login.png" border="0" alt="Login" /></td>
+    <td> <img width="350px" src="./documentation/register.png" border="0"  alt="Register" /></td>
+  </tr>
+  <tr>
+    <td><img width="350px" src="/documentation/home.png" border="0" alt="Login" /></td>
+    <td> <img width="350px" src="./documentation/details.png" border="0"  alt="Register" /></td>
+  </tr>
+  <tr>
+    <td><img width="350px" src="/documentation/checkout.png" border="0" alt="Login" /></td>
+    <td> <img width="350px" src="./documentation/profile.png" border="0"  alt="Register" /></td>
   </tr>
 </table>
 
@@ -66,10 +74,9 @@ As part of a project team, contributions to "Blanja" were made collectively. For
 
 As the specific licensing information for "Blanja" may vary based on the project team's decisions, please refer to the LICENSE file in the project repository for details.
 
-## Contact 📞📧
+## Related Project
 
-If you have any questions or inquiries regarding this project, feel free to contact me at [irhamnfrnda@gmail.com](mailto:irhamnfrnda@gmail.com).
-
----
+[Demo Website](https://blanja-fe-theta.vercel.app)
+[Backend Blanja](https://github.com/nluthfis/blanja-be)
 
 Thank you for exploring my Blanja portfolio. "Blanja" has been an exciting project to work on, and we hope that it showcases our skills and passion for creating an engaging e-commerce platform. Happy shopping! 🛍️👠👗

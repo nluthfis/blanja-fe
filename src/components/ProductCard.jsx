@@ -4,20 +4,30 @@ import "../style/components/ProductCard.scss";
 import { Link } from "react-router-dom";
 
 function ProductCard({ productId, image, title, price, storeName, rating }) {
-
   // Function to change price to rupiah format
   const formatPrice = (price) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
     }).format(price);
-  }
+  };
+
+  const renderStars = () => {
+    const starCount = Math.round(rating);
+    const stars = [];
+
+    for (let i = 0; i < 5; i++) {
+      const starColor = i < starCount ? "#FF9529" : "gray";
+      stars.push(
+        <FontAwesomeIcon key={i} icon="star" size="sm" color={starColor} />
+      );
+    }
+
+    return stars;
+  };
 
   return (
-    <Link
-      className="text-decoration-none"
-      to={`/product/${productId}`}
-    >
+    <Link className="text-decoration-none" to={`/product/${productId}`}>
       <div className="ProductCard">
         <div className="card mt-3 mb-3 h-100">
           <img src={image} className="card-img-top" alt="Product" />
@@ -28,38 +38,7 @@ function ProductCard({ productId, image, title, price, storeName, rating }) {
             </h5>
             <small className="text text-muted">{storeName}</small>
             <div className="row my-2">
-              <div className="ic-rating col-auto pe-0">
-                <FontAwesomeIcon
-                  id="ic-star"
-                  className="ic"
-                  icon="star"
-                  size="sm"
-                />
-                <FontAwesomeIcon
-                  id="ic-star"
-                  className="ic"
-                  icon="star"
-                  size="sm"
-                />
-                <FontAwesomeIcon
-                  id="ic-star"
-                  className="ic"
-                  icon="star"
-                  size="sm"
-                />
-                <FontAwesomeIcon
-                  id="ic-star"
-                  className="ic"
-                  icon="star"
-                  size="sm"
-                />
-                <FontAwesomeIcon
-                  id="ic-star"
-                  className="ic"
-                  icon="star"
-                  size="sm"
-                />
-              </div>
+              <div className="ic-rating col-auto pe-0">{renderStars()}</div>
               <div className="rating col-auto ps-0">
                 <small className="text">({rating})</small>
               </div>

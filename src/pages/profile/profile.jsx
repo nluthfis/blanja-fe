@@ -125,7 +125,6 @@ function Profile() {
       .then((response) => {
         setLoading(false);
         // localStorage.setItem("userName", response?.data?.data[0].user_name);
-        console.log(response?.data?.data[0].user_photo);
         Swal.fire({
           title: "Success",
           text: "Update Profile Success!",

@@ -4,8 +4,8 @@ import Sidebar from "../../components/Sidebar";
 import "../../style/pages/ShipingAdress.scss";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function ShipingAddres() {
   const [shippingAddress, setShippingAddress] = useState(null);
@@ -33,7 +33,7 @@ function ShipingAddres() {
         setLoading(false);
         console.log(err);
       });
-  }
+  };
 
   const handleSubmitAddress = (e) => {
     e.preventDefault();
@@ -52,29 +52,31 @@ function ShipingAddres() {
           title: "Success",
           text: "Success Add Address!",
           icon: "success",
-        })
+        });
         getAddress();
       })
       .catch((err) => {
         console.log(err);
         Swal.fire({
           title: "Failed",
-          text: err?.response?.data?.message ? err.response.data.message : "Failed Add Address",
+          text: err?.response?.data?.message
+            ? err.response.data.message
+            : "Failed Add Address",
           icon: "error",
-        })
+        });
       });
   };
 
   const handleDeleteAddress = (addressId) => {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     console.log(`Delete Address: ${addressId}`);
     axios
       .delete(`${process.env.REACT_APP_BASE_URL}/address/delete_address`, {
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         data: {
-          adds_id: addressId, 
+          adds_id: addressId,
         },
       })
       .then((result) => {
@@ -149,7 +151,7 @@ function ShipingAddres() {
                         <div className="row">
                           {/* ini dalam untuk row */}
                           <div className="mb-2 ">
-                            <label for="allAddress" className="form-label">
+                            <label htmlFor="allAddress" className="form-label">
                               Save address as (ex : home address, office
                               address)
                             </label>
@@ -164,7 +166,7 @@ function ShipingAddres() {
 
                           <div className="col-md-6 ">
                             <div className="mb-2 ">
-                              <label for="name" className="form-label">
+                              <label htmlFor="name" className="form-label">
                                 Recipient’s name
                               </label>
                               <input
@@ -176,7 +178,7 @@ function ShipingAddres() {
                             </div>
 
                             <div className="mb-2 ">
-                              <label for="address" className="form-label">
+                              <label htmlFor="address" className="form-label">
                                 Address
                               </label>
                               <input
@@ -189,7 +191,10 @@ function ShipingAddres() {
                           </div>
 
                           <div className="mb-2 col-md-6">
-                            <label for="telphone_number" className="form-label">
+                            <label
+                              htmlFor="telphone_number"
+                              className="form-label"
+                            >
                               Recipient's telephone number
                             </label>
                             <input
@@ -199,7 +204,7 @@ function ShipingAddres() {
                               ref={recipient_phone_number}
                             />
 
-                            <label for="postal_code" className="form-label">
+                            <label htmlFor="postal_code" className="form-label">
                               Postal code{" "}
                             </label>
                             <input
@@ -211,7 +216,7 @@ function ShipingAddres() {
                           </div>
 
                           <div className="mb-2 col-md-6">
-                            <label for="city" className="form-label">
+                            <label htmlFor="city" className="form-label">
                               City or Subdistrict{" "}
                             </label>
                             <input
@@ -248,14 +253,12 @@ function ShipingAddres() {
                         </div>
                       </form>
                     </div>
-
                   </div>
                 </div>
               </div>
             </div>
 
-
-{/* 
+            {/* 
             {
               shippingAddress?.length > 0 ? (
                 shippingAddress.map((item, index) => (
@@ -276,38 +279,48 @@ function ShipingAddres() {
               )
             } */}
 
-            {
-              !loading ? (
-                shippingAddress?.length > 0 ? (
-                  shippingAddress.map((item, index) => (
-                    <div className="box-address mt-2 mb-2" key={index}>
-                      <h4 style={{ color: "black" }}>{item.recipient_name}</h4>
-                      <p>
-                        {item.address_data || <Skeleton />}, {item.city || <Skeleton />},{" "}
-                        <span>Postal Code: {item.postal_code || <Skeleton />}</span>
-                        <span>Recipient's Phone: {item.recipient_phone_number || <Skeleton />}</span>
-                      </p>
-                      <button className="btn btn-change-address" onClick={() => handleDeleteAddress(item.address_id)}>Delete address</button>
-                    </div>
-                  ))
-                ) : (
-                  <p>Address Not Found</p>
-                )
+            {!loading ? (
+              shippingAddress?.length > 0 ? (
+                shippingAddress.map((item, index) => (
+                  <div className="box-address mt-2 mb-2" key={index}>
+                    <h4 style={{ color: "black" }}>{item.recipient_name}</h4>
+                    <p>
+                      {item.address_data || <Skeleton />},{" "}
+                      {item.city || <Skeleton />},{" "}
+                      <span>
+                        Postal Code: {item.postal_code || <Skeleton />}
+                      </span>
+                      <span>
+                        Recipient's Phone:{" "}
+                        {item.recipient_phone_number || <Skeleton />}
+                      </span>
+                    </p>
+                    <button
+                      className="btn btn-change-address"
+                      onClick={() => handleDeleteAddress(item.address_id)}
+                    >
+                      Delete address
+                    </button>
+                  </div>
+                ))
               ) : (
-                <>
-                  <div className="box-address mt-2 mb-2">
-                      <h4 style={{ color: "black" }}>{<Skeleton width={300}/>}</h4>
-                      <p>
-                        {<Skeleton width={300}/>},{" "}
-                        <span>{<Skeleton width={300} />}</span>
-                        <span>{<Skeleton width={300}/>}</span>
-                      </p>
-                      <button className="btn btn-change-address">{<Skeleton width={100}/>}</button>
-                    </div>
-                </>
+                <p>Address Not Found</p>
               )
-            }
-
+            ) : (
+              <>
+                <div className="box-address mt-2 mb-2">
+                  <h4 style={{ color: "black" }}>{<Skeleton width={300} />}</h4>
+                  <p>
+                    {<Skeleton width={300} />},{" "}
+                    <span>{<Skeleton width={300} />}</span>
+                    <span>{<Skeleton width={300} />}</span>
+                  </p>
+                  <button className="btn btn-change-address">
+                    {<Skeleton width={100} />}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </main>

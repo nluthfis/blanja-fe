@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import "../style/pages/Detail.scss";
 import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,8 +10,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Accordion from "react-bootstrap/Accordion";
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import axios from "axios";
 
@@ -24,6 +25,8 @@ function Detail() {
   const [countAmount, setCountAmount] = useState(1);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [productList, setProductList] = useState([]);
+  const [photoProduct, setPhotoProduct] = useState([]);
+  const [score, setScore] = useState(null);
 
   // color
   const [color, setColor] = useState([]);
@@ -31,12 +34,10 @@ function Detail() {
   const changeColor = (color) => {
     setSelectedColor(color);
   };
-  // console.log(selectedColor);
 
   //size
   const [size, setSize] = useState([]);
   const [selectedSize, setSelectedSize] = useState(null);
-  console.log(size);
   const changeSize = (size) => {
     setSelectedSize(size);
   };
@@ -50,7 +51,6 @@ function Detail() {
   const changeAddress = (address) => {
     setSelectedAddress(address);
   };
-  console.log(selectedAddress);
 
   useEffect(() => {
     const currentId = location.pathname.split("/")[2];
@@ -59,15 +59,16 @@ function Detail() {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/product/${currentId}`)
       .then((result) => {
-        setLoading(false);
+        setScore(result.data.data[0].score);
+        setPhotoProduct(result.data.data[0].path);
         setCurrentProduct(result?.data?.data[0]);
+        console.log(result?.data?.data[0].product_category);
         setColor(result?.data?.data[0].product_color.split(", "));
         setSize(result?.data?.data[0].product_size.split(", "));
         setIsActive(0);
-        setImageId(currentProduct?.path[0]?.photo_path);
         axios
           .get(
-            `${process.env.REACT_APP_BASE_URL}/product?category=${currentProduct?.product_category}`
+            `${process.env.REACT_APP_BASE_URL}/product?category=${result?.data?.data[0].product_category}`
           )
           .then((response) => {
             const relatedProductData = response?.data?.data;
@@ -77,6 +78,9 @@ function Detail() {
       .catch((err) => {
         setLoading(false);
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -139,6 +143,20 @@ function Detail() {
       });
   };
 
+  const renderStars = () => {
+    const starCount = Math.round(score);
+    const stars = [];
+
+    for (let i = 0; i < 5; i++) {
+      const starColor = i < starCount ? "#FF9529" : "gray";
+      stars.push(
+        <FontAwesomeIcon key={i} icon="star" size="sm" color={starColor} />
+      );
+    }
+
+    return stars;
+  };
+
   return (
     <div className="DetailProduct">
       <Navbar />
@@ -147,129 +165,59 @@ function Detail() {
         <div className="row">
           <div className="col-4">
             <div className="d-flex mb-3 justify-content-center">
-              {
-                !loading ? (
-                  <img
-                    className="img-product-big"
-                    //tenary opertator to check if imageid is available
-                    src={imageId ? imageId : currentProduct?.path[0]?.photo_path}
-                    alt="Image Product"
-                  />
-                ) : (
-                  <Skeleton width={'300'} height={'300'} />
-                )
-              }
+              {!loading ? (
+                <img
+                  className="img-product-big"
+                  src={imageId ? imageId : currentProduct?.path[0]?.photo_path}
+                  alt="Image Product"
+                />
+              ) : (
+                <Skeleton width={"300"} height={"300"} />
+              )}
             </div>
             <div className="d-flex mt-3 justify-content-center overflow-hidden">
-              <div className="col-auto">
-                {
-                  !loading ?
-                    (
-                      <img
-                        className={`img-product-small ${isActive === 0 ? "active" : ""
-                          }`}
-                        src={currentProduct?.path[0]?.photo_path}
-                        alt="Image Product"
-                        onClick={(e) =>
-                          changeImage(0, currentProduct?.path[0]?.photo_path)
-                        }
-                      />
-                    ) : (
-                      <Skeleton width={'50'} height={'50'} />
-                    )
-                }
-              </div>
-              <div className="col-auto">
-                {
-                  !loading ?
-                    (
-                      <img
-                        className={`img-product-small ${isActive === 1 ? "active" : ""
-                          }`}
-                        src={currentProduct?.path[1]?.photo_path}
-                        alt="Image Product"
-                        onClick={(e) =>
-                          changeImage(0, currentProduct?.path[1]?.photo_path)
-                        }
-                      />
-                    ) : (
-                      <Skeleton width={'50'} height={'50'} />
-                    )
-                }
-              </div>
-              <div className="col-auto">
-                <img
-                  className={`img-product-small ${isActive === 2 ? "active" : ""
-                    }`}
-                  src={currentProduct?.path[2]?.photo_path}
-                  alt="Image Product"
-                  onClick={(e) =>
-                    changeImage(2, currentProduct?.path[2]?.photo_path)
-                  }
-                />
-              </div>
-              <div className="col-auto">
-                <img
-                  className={`img-product-small ${isActive === 3 ? "active" : ""
-                    }`}
-                  src={currentProduct?.path[3]?.photo_path}
-                  alt="Image Product"
-                  onClick={(e) =>
-                    changeImage(3, currentProduct?.path[3]?.photo_path)
-                  }
-                />
-              </div>
+              {photoProduct.map((photo, index) => (
+                <div className="col-auto" key={index}>
+                  {!loading ? (
+                    <img
+                      className={`img-product-small ${
+                        isActive === index ? "active" : ""
+                      }`}
+                      src={photo.photo_path}
+                      alt="Image Product"
+                      onClick={(e) => changeImage(index, photo.photo_path)}
+                    />
+                  ) : (
+                    <Skeleton width={"50"} height={"50"} />
+                  )}
+                </div>
+              ))}
             </div>
           </div>
           <div className="col-8">
             <div className="row ms-2">
-              <h2 className="fw-bold">{currentProduct?.product_name || <Skeleton width={'300'}/> }</h2>
-              <h6 className="text text-muted">Code Crafters</h6>
+              <h2 className="fw-bold">
+                {currentProduct?.product_name || <Skeleton width={"300"} />}
+              </h2>
+              <h6 className="text text-muted">
+                {currentProduct?.product_category || <Skeleton width={"300"} />}
+              </h6>
               <div className="row my-2">
-                <div className="ic-rating col-auto pe-0">
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                </div>
+                <div className="ic-rating col-auto pe-0">{renderStars()}</div>
                 <div className="rating col-auto ps-0">
-                  <small className="text">(4.8)</small>
+                  <small className="text">({score})</small>
                 </div>
               </div>
               <h6 className="text fw-light text-muted mt-3">Price</h6>
               <h1 className="fw-bolder">
-                {formatPrice(currentProduct?.product_price) || <Skeleton width={'300'} />}
+                {formatPrice(currentProduct?.product_price) || (
+                  <Skeleton width={"300"} />
+                )}
               </h1>
               <h6 className="text fw-bold mt-5">Color</h6>
               <div className="row">
                 <Dropdown>
-                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  <Dropdown.Toggle variant="danger" id="dropdown-basic">
                     {selectedColor ? selectedColor : "Select Color"}
                   </Dropdown.Toggle>
 
@@ -294,7 +242,7 @@ function Detail() {
                   <h6 className="text fw-bold">Size</h6>
                   <div className="row d-flex align-items-center">
                     <Dropdown>
-                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                      <Dropdown.Toggle variant="danger" id="dropdown-basic">
                         {selectedSize ? selectedSize : "Select Size"}
                       </Dropdown.Toggle>
 
@@ -427,13 +375,13 @@ function Detail() {
         <div id="condition" className="row mt-5">
           <h4>Condition</h4>
           <h4 style={{ color: "#DB3022" }}>
-            {currentProduct?.product_condition || <Skeleton width={'300'} />}
+            {currentProduct?.product_condition || <Skeleton width={"300"} />}
           </h4>
         </div>
         <div id="description" className="row mt-5">
           <h4>Description</h4>
           <p className="text text-muted">
-            {currentProduct?.product_description || <Skeleton width={'300'} />}
+            {currentProduct?.product_description || <Skeleton width={"300"} />}
           </p>
         </div>
         <div id="product-review" className="row mt-5">
@@ -442,7 +390,7 @@ function Detail() {
             <div className="col-md-1 d-flex align-items-center me-5">
               <div className="row gx-0">
                 <h1>
-                  4.8
+                  {score}
                   <span
                     className="text text-muted"
                     style={{ fontSize: "1.25rem" }}
@@ -450,37 +398,9 @@ function Detail() {
                     /5
                   </span>
                 </h1>
-                <div className="ic-rating">
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
+                <div className="ic-rating col-auto pe-0">{renderStars()}</div>
+                <div className="rating col-auto ps-0">
+                  <small className="text">({score})</small>
                 </div>
               </div>
             </div>
@@ -666,15 +586,15 @@ function Detail() {
           </div>
           <div className="row row-cols-md-5 rows-cols-xs-2">
             {productList?.length > 0 ? (
-              productList.map((product) => (
-                <div className="col">
+              productList.map((product, index) => (
+                <div className="col" key={index}>
                   <ProductCard
                     productId={product?.product_id}
                     image={product?.path[0].photo_path}
                     title={product?.product_name}
                     price={product?.product_price}
-                    storeName={"Code Crafters"}
-                    rating={"4.8"}
+                    storeName={product?.product_category}
+                    rating={product?.score}
                   />
                 </div>
               ))

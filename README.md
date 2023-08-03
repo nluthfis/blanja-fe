@@ -41,17 +41,29 @@ The backend repository for this project can be found on GitHub at the following 
 ## Screenshots 📸
 
 <table>
+  <tr>
+    <td>Login Pages</td>
+    <td>Register Pages </td>
+  </tr>
    <tr>
     <td><img width="350px" src="/documentation/login.png" border="0" alt="Login" /></td>
     <td> <img width="350px" src="./documentation/register.png" border="0"  alt="Register" /></td>
   </tr>
   <tr>
-    <td><img width="350px" src="/documentation/home.png" border="0" alt="Login" /></td>
-    <td> <img width="350px" src="./documentation/details.png" border="0"  alt="Register" /></td>
+    <td>Home Pages</td>
+    <td>Details Product Pages</td>
   </tr>
   <tr>
-    <td><img width="350px" src="/documentation/checkout.png" border="0" alt="Login" /></td>
-    <td> <img width="350px" src="./documentation/profile.png" border="0"  alt="Register" /></td>
+    <td><img width="350px" src="/documentation/home.png" border="0" alt="Home" /></td>
+    <td> <img width="350px" src="./documentation/details.png" border="0"  alt="Details" /></td>
+  </tr>
+  <tr>
+    <td>CheckOut Pages</td>
+    <td>Profile Pages</td>
+  </tr>
+  <tr>
+    <td><img width="350px" src="/documentation/checkout.png" border="0" alt="CheckOut" /></td>
+    <td> <img width="350px" src="./documentation/profile.png" border="0"  alt="Profile" /></td>
   </tr>
 </table>
 
@@ -76,7 +88,7 @@ As the specific licensing information for "Blanja" may vary based on the project
 
 ## Related Project
 
-[Demo Website](https://blanja-fe-theta.vercel.app)
+[Demo Website](https://blanja-fe-sigma.vercel.app)
 [Backend Blanja](https://github.com/nluthfis/blanja-be)
 
 Thank you for exploring my Blanja portfolio. "Blanja" has been an exciting project to work on, and we hope that it showcases our skills and passion for creating an engaging e-commerce platform. Happy shopping! 🛍️👠👗

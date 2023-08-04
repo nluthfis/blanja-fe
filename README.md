@@ -42,33 +42,33 @@ The backend repository for this project can be found on GitHub at the following 
 
 <table>
   <tr>
-    <td>Login Pages</td>
-    <td>Register Pages </td>
+    <td>Login Page</td>
+    <td>Register Page </td>
   </tr>
    <tr>
     <td><img width="350px" src="/documentation/login.png" border="0" alt="Login" /></td>
     <td> <img width="350px" src="./documentation/register.png" border="0"  alt="Register" /></td>
   </tr>
   <tr>
-    <td>Home Pages</td>
-    <td>Details Product Pages</td>
+    <td>Home Page</td>
+    <td>Details Product Page</td>
   </tr>
   <tr>
     <td><img width="350px" src="/documentation/home.png" border="0" alt="Home" /></td>
     <td> <img width="350px" src="./documentation/details.png" border="0"  alt="Details" /></td>
   </tr>
   <tr>
-    <td>Profile Pages</td>
-    <td>Profile Pages Section Address</td>
+    <td>Profile Page</td>
+    <td>Profile Page Section Address</td>
   </tr>
   <tr>
     <td> <img width="350px" src="./documentation/profile.png" border="0"  alt="Profile" /></td>
     <td><img width="350px" src="/documentation/profile_section_address.png" border="0" alt="address" /></td>
   </tr>
    <tr>
-    <td>Profile Pages Section MyOrder</td>
-    <td>Check Out Pages</td>
-     <td>Payment Pages</td>
+    <td>Profile Page Section MyOrder</td>
+    <td>Check Out Page</td>
+     <td>Payment Page</td>
   </tr>
   <tr>
     <td><img width="350px" src="/documentation/myorder.png" border="0" alt="myorder" /></td>
@@ -98,7 +98,7 @@ As the specific licensing information for "Blanja" may vary based on the project
 
 ## Related Project
 
-[Demo Website](https://blanja-fe-sigma.vercel.app)
+[Demo Website](https://blanja-fe-sigma.vercel.app) <br/>
 [Backend Blanja](https://github.com/nluthfis/blanja-be)
 
 Thank you for exploring my Blanja portfolio. "Blanja" has been an exciting project to work on, and we hope that it showcases our skills and passion for creating an engaging e-commerce platform. Happy shopping! 🛍️👠👗

@@ -58,12 +58,22 @@ The backend repository for this project can be found on GitHub at the following 
     <td> <img width="350px" src="./documentation/details.png" border="0"  alt="Details" /></td>
   </tr>
   <tr>
-    <td>CheckOut Pages</td>
     <td>Profile Pages</td>
+    <td>Profile Pages Section Address</td>
   </tr>
   <tr>
-    <td><img width="350px" src="/documentation/checkout.png" border="0" alt="CheckOut" /></td>
     <td> <img width="350px" src="./documentation/profile.png" border="0"  alt="Profile" /></td>
+    <td><img width="350px" src="/documentation/profile_section_address.png" border="0" alt="address" /></td>
+  </tr>
+   <tr>
+    <td>Profile Pages Section MyOrder</td>
+    <td>Check Out Pages</td>
+     <td>Payment Pages</td>
+  </tr>
+  <tr>
+    <td><img width="350px" src="/documentation/myorder.png" border="0" alt="myorder" /></td>
+    <td> <img width="350px" src="./documentation/checkout.png" border="0"  alt="checkout" /></td>
+    <td> <img width="350px" src="./documentation/payment.png" border="0"  alt="payment" /></td>
   </tr>
 </table>
 

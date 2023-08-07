@@ -25,7 +25,6 @@ function Dashboard() {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/product?page=${currentPageNew}`)
       .then((response) => {
-        console.log(response);
         setTotalPageNew(response?.data.pages.total);
         setNewProductList(response?.data?.data);
       })
@@ -56,12 +55,10 @@ function Dashboard() {
   }, [currentPagePopular]);
 
   const handlePageChangeNew = (newPage) => {
-    console.log(newPage);
     setCurrentPageNew(newPage);
   };
 
   const handlePageChangePopular = (newPage) => {
-    console.log(newPage);
     setCurrentPagePopular(newPage);
   };
 

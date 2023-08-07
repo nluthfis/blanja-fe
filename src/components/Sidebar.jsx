@@ -1,9 +1,11 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React from "react";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../style/components/Sidebar.scss";
-function Sidebar() {
+import Skeleton from "react-loading-skeleton";
+function Sidebar({ loading }) {
   const userPhoto = localStorage.getItem("userPhoto");
   const userName = localStorage.getItem("userName");
 
@@ -16,17 +18,35 @@ function Sidebar() {
             <div className="sidebar">
               <div className="d-flex align-items-center ms-3">
                 <div className="ms-5">
-                  <img
-                    className="object-fit-cover rounded-circle"
-                    src={userPhoto}
-                    height="70"
-                    width="70"
-                    alt="User Profile Picture"
-                  />
+                  {!loading ? (
+                    userPhoto ? (
+                      <img
+                        className="object-fit-cover rounded-circle"
+                        src={userPhoto}
+                        height="70"
+                        width="70"
+                        alt="User Profile Picture"
+                      />
+                    ) : (
+                      "Not Defined"
+                    )
+                  ) : (
+                    <Skeleton width={75} height={75} circle={true} />
+                  )}
                 </div>
 
                 <div>
-                  <h5 className="h5 ms-3 align-items-center ">{userName}</h5>
+                  <h5 className="h5 ms-3 align-items-center ">
+                    {!loading ? (
+                      userName ? (
+                        userName
+                      ) : (
+                        "Not Defined"
+                      )
+                    ) : (
+                      <Skeleton width={150} />
+                    )}
+                  </h5>
                   <Link
                     className="li text-decoration-none text-black"
                     to="/profile?act=update"
@@ -56,7 +76,7 @@ function Sidebar() {
                   <div className="col">
                     <NavLink
                       className={({ isActive, isPending }) =>
-                        `text-decoration-none ${
+                        `text-decoration-none text-dark ${
                           isActive ? "side-link-active" : ""
                         } ${isPending ? "" : "hide-on-mobile"}`
                       }
@@ -76,7 +96,7 @@ function Sidebar() {
                   <div className="col">
                     <NavLink
                       className={({ isActive, isPending }) =>
-                        `text-decoration-none ${
+                        `text-decoration-none text-dark${
                           isActive ? "side-link-active" : ""
                         } ${isPending ? "" : "hide-on-mobile"}`
                       }
@@ -96,7 +116,7 @@ function Sidebar() {
                   <div className="col">
                     <NavLink
                       className={({ isActive, isPending }) =>
-                        `text-decoration-none ${
+                        `text-decoration-none text-dark ${
                           isActive ? "side-link-active" : ""
                         } ${isPending ? "" : "hide-on-mobile"}`
                       }

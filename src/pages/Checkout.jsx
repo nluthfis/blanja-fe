@@ -15,26 +15,41 @@ function Checkout() {
   const [address, setAddress] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [show, setShow] = useState(false);
-  const product = location.state.product;
-  const productSize = location.state.product_size;
-  const productColor = location.state.product_color;
-  const totalProduct = location.state.total_product;
+  // const product = location.state.product;
+  // const productSize = location.state.product_size;
+  // const productColor = location.state.product_color;
+  // const totalProduct = location.state.total_product;
   const address_name = useRef();
   const recipient_name = useRef();
   const recipient_phone_number = useRef();
   const address_data = useRef();
   const postal_code = useRef();
   const city = useRef();
+  const [order, setOrder] = useState([]);
+  console.log(order);
 
   useEffect(() => {
     setLoading(true);
     if (localStorage.getItem("auth") === null) {
       window.location.href = "/login";
     }
+    const getOrder = async () => {
+      try {
+        const result = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/order`
+        );
+        console.log(result);
+        setOrder(result.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
     const fetchData = async () => {
       try {
-        const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/address`);
+        const result = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/address`
+        );
         setAddress(result?.data?.data);
         setSelectedAddress(result?.data?.data[0]);
         setLoading(false);
@@ -43,7 +58,7 @@ function Checkout() {
         console.log(error);
       }
     };
-
+    getOrder();
     fetchData();
   }, []);
 
@@ -74,7 +89,7 @@ function Checkout() {
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   // Function to change price to rupiah format
   const formatPrice = (price) => {
@@ -113,35 +128,35 @@ function Checkout() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleCheckOut = () => {
-    setLoading(true);
-    axios
-      .post(`${process.env.REACT_APP_BASE_URL}/product/createOrder`, {
-        adds_id: selectedAddress.address_id,
-        product_id: product.product_id,
-        product_size: productSize,
-        product_color: productColor,
-        total_product: totalProduct,
-      })
-      .then((result) => {
-        console.log(result);
-        axios
-          .post(`${process.env.REACT_APP_BASE_URL}/create-payment`)
-          .then((result) => {
-            setLoading(false);
-            console.log(result?.data?.transactionToken);
-            window.snap.pay(result?.data?.data?.transactionToken);
-          })
-          .catch((err) => {
-            setLoading(false);
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err);
-      });
-  };
+  // const handleCheckOut = () => {
+  //   setLoading(true);
+  //   axios
+  //     .post(`${process.env.REACT_APP_BASE_URL}/product/createOrder`, {
+  //       adds_id: selectedAddress.address_id,
+  //       product_id: product.product_id,
+  //       product_size: productSize,
+  //       product_color: productColor,
+  //       total_product: totalProduct,
+  //     })
+  //     .then((result) => {
+  //       console.log(result);
+  //       axios
+  //         .post(`${process.env.REACT_APP_BASE_URL}/create-payment`)
+  //         .then((result) => {
+  //           setLoading(false);
+  //           console.log(result?.data?.transactionToken);
+  //           window.snap.pay(result?.data?.data?.transactionToken);
+  //         })
+  //         .catch((err) => {
+  //           setLoading(false);
+  //           console.log(err);
+  //         });
+  //     })
+  //     .catch((err) => {
+  //       setLoading(false);
+  //       console.log(err);
+  //     });
+  // };
 
   return (
     <div className="Checkout">
@@ -157,78 +172,139 @@ function Checkout() {
               <h6 className="fw-bold">Shipping Address</h6>
               <div id="card-shipping" className="card mt-1">
                 <div className="card-body">
-                  {
-                    address?.length > 0 ? (
-                      <>
-                        <h6 className="fw-bold">
-                          {selectedAddress?.recipient_name} ({selectedAddress?.address_name})
-                        </h6>
-                        <p className="text mb-0">
-                          {selectedAddress?.recipient_phone_number}
-                        </p>
-                        <h6 className="card-title">{selectedAddress?.address_data}</h6>
-                        <p className="card-text">
-                          {selectedAddress?.city} {selectedAddress?.postal_code}
-                        </p>
-                        <button
-                          id="btn-address"
-                          type="button"
-                          className="btn btn-light border-2 border rounded-pill"
-                          onClick={
-                            handleShow
-                          }
-                        >
-                          Choose another address
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <p>There are no addresses.</p>
-                        <button
-                          id="btn-address"
-                          type="button"
-                          className="btn btn-light border-2 border rounded-pill"
-                          onClick={
-                            handleShow
-                          }
-                        >
-                          Add address
-                        </button>
-                      </>
-                    )
-                  }
+                  {address?.length > 0 ? (
+                    <>
+                      <h6 className="fw-bold">
+                        {selectedAddress?.recipient_name} (
+                        {selectedAddress?.address_name})
+                      </h6>
+                      <p className="text mb-0">
+                        {selectedAddress?.recipient_phone_number}
+                      </p>
+                      <h6 className="card-title">
+                        {selectedAddress?.address_data}
+                      </h6>
+                      <p className="card-text">
+                        {selectedAddress?.city} {selectedAddress?.postal_code}
+                      </p>
+                      <button
+                        id="btn-address"
+                        type="button"
+                        className="btn btn-light border-2 border rounded-pill"
+                        onClick={handleShow}
+                      >
+                        Choose another address
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <p>There are no addresses.</p>
+                      <button
+                        id="btn-address"
+                        type="button"
+                        className="btn btn-light border-2 border rounded-pill"
+                        onClick={handleShow}
+                      >
+                        Add address
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
             <div className="row mt-4">
               <h6 className="fw-bold">Items</h6>
-              <div id="card-items" className="card mt-1">
-                <div className="card-body">
-                  <div className="row d-flex align-items-center">
-                    <div className="col-auto">
-                      <img
-                        className="img-product"
-                        src={product?.path[0]?.photo_path}
-                        alt="Image Product"
-                      />
-                    </div>
-                    <div className="col-md-7">
-                      <h6 className="card-title fw-bold">
-                        {product.product_name} - {productColor}
-                      </h6>
-                      <small className="text-muted">Code Crafters</small>
-                    </div>
-                    <div className="col-md-3 text-end">
-                      <h5 className="card-title fw-bold">
-                        {formatPrice(product.product_price)}
-                      </h5>
+              {order.length === 0 ? (
+                <p>No orders found.</p>
+              ) : (
+                order.map((orderItem, index) => (
+                  <div key={index}>
+                    <p>
+                      Order ID: {orderItem.order_id}
+                      <br />
+                      Created Date: {orderItem.created_date}
+                      <br />
+                      User ID: {orderItem.user_id}
+                      <br />
+                      Product ID: {orderItem.product_id}
+                      <br />
+                      Total Product: {orderItem.total_product}
+                      <br />
+                      Address Name: {orderItem.address_name}
+                      <br />
+                      City: {orderItem.city}
+                      <br />
+                      Postal Code: {orderItem.postal_code}
+                      <br />
+                      Recipient Name: {orderItem.recipient_name}
+                      <br />
+                      Recipient Phone Number: {orderItem.recipient_phone_number}
+                      <br />
+                      Seller ID: {orderItem.seller_id}
+                      <br />
+                      Shipping Price: {orderItem.shipping_price}
+                      <br />
+                      Total Price: {orderItem.total_price}
+                      <br />
+                      Product Color: {orderItem.product_color}
+                      <br />
+                      Product Size: {orderItem.product_size}
+                      <br />
+                    </p>
+                    <div>
+                      {orderItem.path.map((photo, photoIndex) => (
+                        <img
+                          className="img-fluid w-25"
+                          key={photoIndex}
+                          src={photo.photo_path}
+                          alt={`Photo ${photoIndex + 1}`}
+                        />
+                      ))}
                     </div>
                   </div>
-                </div>
-              </div>
+                ))
+              )}
+
+              {/* {order && order.data[0].length === 0 ? (
+                <p>No orders found.</p>
+              ) : (
+                order &&
+                order.data[0].map((orderItem) => (
+                  <div
+                    id="card-items"
+                    className="card mt-1"
+                    // key={orderItem.order_id}
+                  >
+                    <p>{orderItem.order_id}</p> */}
+              {/* <div className="card-body">
+                      <div className="row d-flex align-items-center">
+                        <div className="col-auto">
+                          <img
+                            className="img-product"
+                            src={order.data?.path?.photo_path}
+                            alt="Image Product"
+                          />
+                        </div>
+                        <div className="col-md-7">
+                          <h6 className="card-title fw-bold">
+                            {orderItem.product.product_name} -{" "}
+                            {orderItem.productColor}
+                          </h6>
+                          <small className="text-muted">Code Crafters</small>
+                        </div>
+                        <div className="col-md-3 text-end">
+                          <h5 className="card-title fw-bold">
+                            {formatPrice(orderItem.product.product_price)}
+                          </h5>
+                        </div>
+                      </div>
+                    </div> */}
+              {/* </div>
+                ))
+              )} */}
             </div>
           </div>
-          <div className="col-md-4">
+          {/* <div className="col-md-4">
             <div id="card-summary" className="card">
               <div className="card-body">
                 <h6 className="card-title fw-bold">Shopping Summary</h6>
@@ -238,7 +314,7 @@ function Checkout() {
                   </div>
                   <div className="col-auto">
                     <h6 className="fw-bold">
-                      {formatPrice(product.product_price)} (x
+                      {formatPrice(product.product_price)} (
                       {totalProduct})
                     </h6>
                   </div>
@@ -248,9 +324,7 @@ function Checkout() {
                     <h6 className="fw-normal text-muted">Delivery</h6>
                   </div>
                   <div className="col-auto">
-                    <h6 className="fw-bold">
-                      {formatPrice(25000)}
-                    </h6>
+                    <h6 className="fw-bold">{formatPrice(25000)}</h6>
                   </div>
                 </div>
                 <hr className="solid" style={{ borderTop: "2px solid" }} />
@@ -260,7 +334,9 @@ function Checkout() {
                   </div>
                   <div className="col-auto">
                     <h6 className="fw-bold" style={{ color: "#db3022" }}>
-                      {formatPrice(product.product_price * totalProduct + 25000)}
+                      {formatPrice(
+                        product.product_price * totalProduct + 25000
+                      )}
                     </h6>
                   </div>
                 </div>
@@ -274,7 +350,7 @@ function Checkout() {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
 

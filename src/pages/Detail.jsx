@@ -14,6 +14,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import axios from "axios";
+import Checkout from "./Checkout";
 
 function Detail() {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ function Detail() {
   const [productList, setProductList] = useState([]);
   const [photoProduct, setPhotoProduct] = useState([]);
   const [score, setScore] = useState(null);
+  const [review, setReview] = useState([]);
 
   // color
   const [color, setColor] = useState([]);
@@ -43,14 +45,14 @@ function Detail() {
   };
 
   //address
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const [show, setShow] = useState(false);
+  // const handleClose = () => setShow(false);
+  // const handleShow = () => setShow(true);
 
-  const [selectedAddress, setSelectedAddress] = useState(null);
-  const changeAddress = (address) => {
-    setSelectedAddress(address);
-  };
+  // const [selectedAddress, setSelectedAddress] = useState(null);
+  // const changeAddress = (address) => {
+  //   setSelectedAddress(address);
+  // };
 
   useEffect(() => {
     const currentId = location.pathname.split("/")[2];
@@ -62,7 +64,6 @@ function Detail() {
         setScore(result.data.data[0].score);
         setPhotoProduct(result.data.data[0].path);
         setCurrentProduct(result?.data?.data[0]);
-        console.log(result?.data?.data[0].product_category);
         setColor(result?.data?.data[0].product_color.split(", "));
         setSize(result?.data?.data[0].product_size.split(", "));
         setIsActive(0);
@@ -71,8 +72,12 @@ function Detail() {
             `${process.env.REACT_APP_BASE_URL}/product?category=${result?.data?.data[0].product_category}`
           )
           .then((response) => {
+            const id_now = Number(currentId);
             const relatedProductData = response?.data?.data;
-            setProductList(relatedProductData);
+            const updatedProductList = relatedProductData.filter(
+              (product) => product.product_id !== id_now
+            );
+            setProductList(updatedProductList);
           });
       })
       .catch((err) => {
@@ -89,16 +94,16 @@ function Detail() {
     setImageId(img);
   };
 
-  const incrementSize = () => {
-    setCountSize(countSize + 1);
-  };
+  // const incrementSize = () => {
+  //   setCountSize(countSize + 1);
+  // };
 
-  const decrementSize = () => {
-    setCountSize(countSize - 1);
-    if (countSize < 2) {
-      setCountSize(1);
-    }
-  };
+  // const decrementSize = () => {
+  //   setCountSize(countSize - 1);
+  //   if (countSize < 2) {
+  //     setCountSize(1);
+  //   }
+  // };
 
   const incrementAmount = () => {
     setCountAmount(countAmount + 1);
@@ -112,16 +117,16 @@ function Detail() {
   };
 
   // Function to handle buy now button
-  const handleBuyNow = () => {
-    navigate("/checkout", {
-      state: {
-        product: currentProduct,
-        product_size: selectedSize,
-        product_color: selectedColor,
-        total_product: countAmount,
-      },
-    });
-  };
+  // const handleBuyNow = () => {
+  //   navigate("/checkout", {
+  // state: {
+  //   product: currentProduct,
+  //   product_size: selectedSize,
+  //   product_color: selectedColor,
+  //   total_product: countAmount,
+  // },
+  //   });
+  // };
 
   // Function to change price to rupiah format
   const formatPrice = (price) => {
@@ -130,18 +135,17 @@ function Detail() {
       currency: "IDR",
     }).format(price);
   };
-  const [address, setAddress] = useState([]);
-  const handleGetAddress = () => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}address`)
-      .then((result) => {
-        console.log(result.data?.data);
-        setAddress(result?.data?.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const [address, setAddress] = useState([]);
+  // const handleGetAddress = () => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_BASE_URL}address`)
+  //     .then((result) => {
+  //       setAddress(result?.data?.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   const renderStars = () => {
     const starCount = Math.round(score);
@@ -156,6 +160,50 @@ function Detail() {
 
     return stars;
   };
+  const handleCreateOrder = async () => {
+    const currentId = location.pathname.split("/")[2];
+    try {
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/product/createOrder`, {
+          product_id: currentId,
+          product_size: selectedSize,
+          product_color: selectedColor,
+          total_product: countAmount,
+        })
+        .then((response) => {
+          console.log(response);
+          navigate("/Checkout");
+        });
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  useEffect(() => {
+    try {
+      const currentId = location.pathname.split("/")[2];
+      console.log(currentId);
+      axios
+        .get(`${process.env.REACT_APP_BASE_URL}/review?product_id=${currentId}`)
+        .then((result) => {
+          setReview(result.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const reviewScores = review.map((item) => item.review_score);
+
+  const scoreFrequency = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }; // Initialize with default values.
+  reviewScores.forEach((score) => {
+    scoreFrequency[score] = (scoreFrequency[score] || 0) + 1;
+  });
+
+  const totalReviews = review.length;
 
   return (
     <div className="DetailProduct">
@@ -263,34 +311,6 @@ function Detail() {
                         )}
                       </Dropdown.Menu>
                     </Dropdown>
-                    {/* <div className="col-auto">
-                      <button
-                        id="btn-inc-dec"
-                        type="button"
-                        className="btn btn-primary border-2 rounded-circle"
-                        onClick={decrementSize}
-                        disabled={countSize === 1 ? true : false}
-                      >
-                        <FontAwesomeIcon
-                          className="ic"
-                          icon="minus"
-                          size="sm"
-                        />
-                      </button>
-                    </div> */}
-                    {/* <div className="col-auto d-flex justify-content-center align-items-center">
-                      <h5 className="lh-1 text-center">{countSize}</h5>
-                    </div>
-                    <div className="col-auto">
-                      <button
-                        id="btn-inc-dec"
-                        type="button"
-                        className="btn btn-primary border-2 rounded-circle"
-                        onClick={incrementSize}
-                      >
-                        <FontAwesomeIcon className="ic" icon="plus" size="sm" />
-                      </button>
-                    </div> */}
                   </div>
                 </div>
                 <div className="col-md-3">
@@ -329,34 +349,12 @@ function Detail() {
               </div>
 
               <div className="row align-items-center d-flex mt-5">
-                {/* <div className="col-md-3">
-                  <button
-                    id="btn-chat"
-                    type="button"
-                    className="btn btn-light border-2 border rounded-pill"
-                  >
-                    Chat
-                  </button>
-                </div>
-                <div className="col-md-3">
-                  <button
-                    id="btn-cart"
-                    type="button"
-                    className="btn btn-light border-2 border rounded-pill"
-                  >
-                    Add Cart
-                  </button>
-                </div> */}
                 <div className="col-md-6">
                   <button
                     id="btn-buy"
                     type="button"
                     className="btn btn-primary border-2 rounded-pill"
-                    onClick={handleBuyNow}
-                    // onClick={() => {
-                    //   handleShow();
-                    //   handleGetAddress();
-                    // }}
+                    onClick={handleCreateOrder}
                     disabled={selectedColor && selectedSize ? false : true}
                   >
                     Buy Now
@@ -405,170 +403,44 @@ function Detail() {
               </div>
             </div>
             <div className="col-md-6">
-              <div className="row align-items-center">
-                <div className="col-auto ps-0 pe-0">
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;5</small>
-                </div>
-                <div className="col-md-3">
-                  <div
-                    className="progress"
-                    role="progressbar"
-                    aria-label="Danger example"
-                    aria-valuenow="90"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    style={{ height: "7px" }}
-                  >
-                    <div
-                      className="progress-bar bg-danger"
-                      style={{ width: "90%" }}
-                    ></div>
+              {Object.keys(scoreFrequency).map((score) => {
+                const frequency = scoreFrequency[score];
+                const percentage = (frequency / totalReviews) * 100;
+                return (
+                  <div key={score} className="row align-items-center">
+                    <div className="col-auto ps-0 pe-0">
+                      <FontAwesomeIcon
+                        id="ic-star"
+                        className="ic"
+                        icon="star"
+                        size="sm"
+                      />
+                    </div>
+                    <div className="col-auto ps-0 pe-0">
+                      <small>&nbsp;{score}</small>
+                    </div>
+                    <div className="col-md-3">
+                      <div
+                        className="progress"
+                        role="progressbar"
+                        aria-label={`Frequency of ${score} stars`}
+                        aria-valuenow={frequency}
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style={{ height: "7px" }}
+                      >
+                        <div
+                          className="progress-bar bg-danger"
+                          style={{ width: `${percentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div className="col-auto ps-0 pe-0">
+                      <small>&nbsp;{frequency}</small>
+                    </div>
                   </div>
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;90</small>
-                </div>
-              </div>
-
-              <div className="row align-items-center">
-                <div className="col-auto ps-0 pe-0">
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;4</small>
-                </div>
-                <div className="col-md-3">
-                  <div
-                    className="progress"
-                    role="progressbar"
-                    aria-label="Danger example"
-                    aria-valuenow="50"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    style={{ height: "7px" }}
-                  >
-                    <div
-                      className="progress-bar bg-danger"
-                      style={{ width: "50%" }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;50</small>
-                </div>
-              </div>
-
-              <div className="row align-items-center">
-                <div className="col-auto ps-0 pe-0">
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;3</small>
-                </div>
-                <div className="col-md-3">
-                  <div
-                    className="progress"
-                    role="progressbar"
-                    aria-label="Danger example"
-                    aria-valuenow="0"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    style={{ height: "7px" }}
-                  >
-                    <div
-                      className="progress-bar bg-danger"
-                      style={{ width: "0%" }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;0</small>
-                </div>
-              </div>
-
-              <div className="row align-items-center">
-                <div className="col-auto ps-0 pe-0">
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;2</small>
-                </div>
-                <div className="col-md-3">
-                  <div
-                    className="progress"
-                    role="progressbar"
-                    aria-label="Danger example"
-                    aria-valuenow="0"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    style={{ height: "7px" }}
-                  >
-                    <div
-                      className="progress-bar bg-danger"
-                      style={{ width: "0%" }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;0</small>
-                </div>
-              </div>
-
-              <div className="row align-items-center">
-                <div className="col-auto ps-0 pe-0">
-                  <FontAwesomeIcon
-                    id="ic-star"
-                    className="ic"
-                    icon="star"
-                    size="sm"
-                  />
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;1</small>
-                </div>
-                <div className="col-md-3">
-                  <div
-                    className="progress"
-                    role="progressbar"
-                    aria-label="Danger example"
-                    aria-valuenow="0"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    style={{ height: "7px" }}
-                  >
-                    <div
-                      className="progress-bar bg-danger"
-                      style={{ width: "0%" }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="col-auto ps-0 pe-0">
-                  <small>&nbsp;0</small>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
         </div>

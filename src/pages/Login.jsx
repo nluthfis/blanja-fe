@@ -1,10 +1,10 @@
 import React from "react";
-import "../style/pages/Login.scss"
+import "../style/pages/Login.scss";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
-import { addAuth } from '../reducers/auth';
+import { addAuth } from "../reducers/auth";
 
 function Login() {
   const navigate = useNavigate();
@@ -62,7 +62,6 @@ function Login() {
       });
   };
 
-
   return (
     <>
       <div className="container">
@@ -87,13 +86,13 @@ function Login() {
                 className="btn-check"
                 name="btnradio"
                 id="custommer"
-                autocomplete="off"
+                autoComplete="off"
                 checked
               />
               <label
                 style={{ height: "50px", width: "150px" }}
                 className="btn btn-outline-danger btn-lg"
-                for="custommer"
+                htmlFor="custommer"
               >
                 Custommer
               </label>
@@ -101,15 +100,14 @@ function Login() {
               <input
                 type="radio"
                 className="btn-check"
-
                 name="btnradio"
                 id="seller"
-                autocomplete="off"
+                autoComplete="off"
               />
               <label
                 style={{ height: "50px", width: "150px" }}
                 className="btn btn-outline-danger btn-lg"
-                for="seller"
+                htmlFor="seller"
               >
                 Seller
               </label>
@@ -117,9 +115,13 @@ function Login() {
             <form
               onSubmit={(event) => {
                 event.preventDefault();
-              }}>
+              }}
+            >
               <div>
-                <label for="exampleInputEmail1" className="form-label"></label>
+                <label
+                  htmlFor="exampleInputEmail1"
+                  className="form-label"
+                ></label>
                 <input
                   type="email"
                   className="form-control form-control-lg"
@@ -131,7 +133,7 @@ function Login() {
               </div>
               <div className="mb-3">
                 <label
-                  for="exampleInputPassword1"
+                  htmlFor="exampleInputPassword1"
                   className="form-label"
                 ></label>
                 <input

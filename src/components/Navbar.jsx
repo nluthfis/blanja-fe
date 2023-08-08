@@ -18,6 +18,9 @@ function Navbar() {
       navigate(`/search/${keyword}`);
     }
   };
+  const handleClickCart = () => {
+    navigate("/checkout");
+  };
 
   return (
     <div className="Navbar">
@@ -66,7 +69,7 @@ function Navbar() {
               {localStorage.getItem("auth") ? (
                 <div className="action col-auto">
                   <div className="row align-items-center d-flex">
-                    <div className="col-auto me-3">
+                    <div className="col-auto me-3" onClick={handleClickCart}>
                       <FontAwesomeIcon
                         id="ic-shopping-cart"
                         className="ic"
@@ -94,7 +97,11 @@ function Navbar() {
                     <div id="img-profile" className="col-auto dropdown">
                       <img
                         className="img-profile rounded-circle"
-                        src={ userPhoto ? userPhoto : "./assets/img/carousel-item-9.webp" }
+                        src={
+                          userPhoto
+                            ? userPhoto
+                            : "./assets/img/carousel-item-9.webp"
+                        }
                         alt="Profile"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -121,7 +128,6 @@ function Navbar() {
                           >
                             Logout
                           </button>
-
                         </li>
                       </ul>
                     </div>

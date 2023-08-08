@@ -1,58 +1,58 @@
-$primary-color: #db3022;
-$primary-color-hover: #cc2b1d;
+// $primary-color: #db3022;
+// $primary-color-hover: #cc2b1d;
 
-.Checkout {
-  #content-checkout {
-    margin-top: 50px;
-    margin-bottom: 25px;
-  }
+// .Checkout {
+//   #content-checkout {
+//     margin-top: 50px;
+//     margin-bottom: 25px;
+//   }
 
-  .card {
-    padding: 1rem;
-    box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.07);
-    border-color: rgba(0, 0, 0, 0.07);
-  }
+//   .card {
+//     padding: 1rem;
+//     box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.07);
+//     border-color: rgba(0, 0, 0, 0.07);
+//   }
 
-  #card-shipping {
-    margin-right: 2rem;
+//   #card-shipping {
+//     margin-right: 2rem;
 
-    #btn-address {
-      padding-left: 2rem;
-      padding-right: 2rem;
-      margin-top: 1rem;
-      background-color: white;
-    }
+//     #btn-address {
+//       padding-left: 2rem;
+//       padding-right: 2rem;
+//       margin-top: 1rem;
+//       background-color: white;
+//     }
 
-    #btn-address:hover {
-      background-color: rgb(228, 228, 228);
-    }
-  }
+//     #btn-address:hover {
+//       background-color: rgb(228, 228, 228);
+//     }
+//   }
 
-  #card-items {
-    .img-product {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      object-position: center;
-      border-radius: 5px;
-    }
-  }
+//   #card-items {
+//     .img-product {
+//       width: 100px;
+//       height: 100px;
+//       object-fit: cover;
+//       object-position: center;
+//       border-radius: 5px;
+//     }
+//   }
 
-  #card-summary {
-    margin-left: 2rem;
+//   #card-summary {
+//     margin-left: 2rem;
 
-    .btn-primary {
-      background-color: $primary-color;
-      border-color: $primary-color !important;
-    }
+//     .btn-primary {
+//       background-color: $primary-color;
+//       border-color: $primary-color !important;
+//     }
 
-    .btn-primary:hover {
-      background-color: $primary-color-hover;
-      border-color: $primary-color-hover;
-    }
+//     .btn-primary:hover {
+//       background-color: $primary-color-hover;
+//       border-color: $primary-color-hover;
+//     }
 
-    #btn-payment {
-      width: 100%;
-    }
-  }
-}
+//     #btn-payment {
+//       width: 100%;
+//     }
+//   }
+// }

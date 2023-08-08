@@ -12,6 +12,7 @@ import Modal from "react-bootstrap/Modal";
 import Accordion from "react-bootstrap/Accordion";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Swal from "sweetalert2";
 
 import axios from "axios";
 import Checkout from "./Checkout";
@@ -29,6 +30,7 @@ function Detail() {
   const [photoProduct, setPhotoProduct] = useState([]);
   const [score, setScore] = useState(null);
   const [review, setReview] = useState([]);
+  const [errMsg, setErrMsg] = useState("");
 
   // color
   const [color, setColor] = useState([]);
@@ -53,8 +55,8 @@ function Detail() {
   // const changeAddress = (address) => {
   //   setSelectedAddress(address);
   // };
-
   useEffect(() => {
+    // if (localStorage.getItem(auth.token))
     const currentId = location.pathname.split("/")[2];
     setLoading(true);
     window.scrollTo(0, 0);
@@ -163,6 +165,16 @@ function Detail() {
   const handleCreateOrder = async () => {
     const currentId = location.pathname.split("/")[2];
     try {
+      const authData = JSON.parse(localStorage.getItem("auth"));
+      if (authData === null || authData.token === null) {
+        Swal.fire({
+          title: "Buy Failed",
+          text: "Please log in to proceed with the order.",
+          icon: "error",
+        });
+        return;
+      }
+
       axios
         .post(`${process.env.REACT_APP_BASE_URL}/product/createOrder`, {
           product_id: currentId,
@@ -350,6 +362,7 @@ function Detail() {
 
               <div className="row align-items-center d-flex mt-5">
                 <div className="col-md-6">
+                  {errMsg}
                   <button
                     id="btn-buy"
                     type="button"

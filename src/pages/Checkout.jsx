@@ -28,6 +28,21 @@ function Checkout() {
   const [order, setOrder] = useState([]);
   console.log(order);
 
+  let totalPrice = 0;
+  let totalProduct = 0;
+  let totalDelivery = 0;
+  let totalOrder = 0;
+
+  for (const orders of order) {
+    totalPrice += parseFloat(orders.total_price);
+    totalProduct += parseFloat(orders.total_product);
+    totalDelivery += parseFloat(orders.shipping_price);
+    totalOrder++;
+  }
+
+  console.log("Total Price:", totalPrice);
+  console.log("Total Products:", totalProduct);
+
   useEffect(() => {
     setLoading(true);
     if (localStorage.getItem("auth") === null) {
@@ -128,35 +143,24 @@ function Checkout() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  // const handleCheckOut = () => {
-  //   setLoading(true);
-  //   axios
-  //     .post(`${process.env.REACT_APP_BASE_URL}/product/createOrder`, {
-  //       adds_id: selectedAddress.address_id,
-  //       product_id: product.product_id,
-  //       product_size: productSize,
-  //       product_color: productColor,
-  //       total_product: totalProduct,
-  //     })
-  //     .then((result) => {
-  //       console.log(result);
-  //       axios
-  //         .post(`${process.env.REACT_APP_BASE_URL}/create-payment`)
-  //         .then((result) => {
-  //           setLoading(false);
-  //           console.log(result?.data?.transactionToken);
-  //           window.snap.pay(result?.data?.data?.transactionToken);
-  //         })
-  //         .catch((err) => {
-  //           setLoading(false);
-  //           console.log(err);
-  //         });
-  //     })
-  //     .catch((err) => {
-  //       setLoading(false);
-  //       console.log(err);
-  //     });
-  // };
+  const handleCheckOut = () => {
+    try {
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/create-payment`)
+        .then((result) => {
+          setLoading(false);
+          console.log(result?.data?.transactionToken);
+          window.snap.pay(result?.data?.data?.transactionToken);
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.log(err);
+        });
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+    }
+  };
 
   return (
     <div className="Checkout">
@@ -212,121 +216,103 @@ function Checkout() {
                 </div>
               </div>
             </div>
-            <div className="row mt-4">
+            <div className="row">
               <h6 className="fw-bold">Items</h6>
               {order.length === 0 ? (
                 <p>No orders found.</p>
               ) : (
                 order.map((orderItem, index) => (
-                  <div key={index}>
-                    <p>
-                      Order ID: {orderItem.order_id}
-                      <br />
-                      Created Date: {orderItem.created_date}
-                      <br />
-                      User ID: {orderItem.user_id}
-                      <br />
-                      Product ID: {orderItem.product_id}
-                      <br />
-                      Total Product: {orderItem.total_product}
-                      <br />
-                      Address Name: {orderItem.address_name}
-                      <br />
-                      City: {orderItem.city}
-                      <br />
-                      Postal Code: {orderItem.postal_code}
-                      <br />
-                      Recipient Name: {orderItem.recipient_name}
-                      <br />
-                      Recipient Phone Number: {orderItem.recipient_phone_number}
-                      <br />
-                      Seller ID: {orderItem.seller_id}
-                      <br />
-                      Shipping Price: {orderItem.shipping_price}
-                      <br />
-                      Total Price: {orderItem.total_price}
-                      <br />
-                      Product Color: {orderItem.product_color}
-                      <br />
-                      Product Size: {orderItem.product_size}
-                      <br />
-                    </p>
-                    <div>
-                      {orderItem.path.map((photo, photoIndex) => (
-                        <img
-                          className="img-fluid w-25"
-                          key={photoIndex}
-                          src={photo.photo_path}
-                          alt={`Photo ${photoIndex + 1}`}
-                        />
-                      ))}
-                    </div>
+                  <div key={index} className="col-md-12">
+                    {orderItem.path.slice(0, 1).map((photo, photoIndex) => (
+                      <div
+                        id="card-items"
+                        className="card mt-1 d-flex"
+                        key={orderItem.order_id}
+                      >
+                        <div className="row">
+                          <div className="card-body d-flex align-items-center">
+                            <div className="col-md-3">
+                              <img
+                                className="img-fluid d-flex mx-auto w-50 object-fit-cover"
+                                key={photoIndex}
+                                src={photo.photo_path}
+                                alt={`Photo ${photoIndex + 1}`}
+                              />
+                            </div>
+                            <div className="col-md-5">
+                              <h5 className="card-title fw-bold">
+                                Order Id: {orderItem.order_id}
+                              </h5>
+                              <h6 className="card-title fw-bold">
+                                Product Name :
+                                {orderItem.product[0].product_name}
+                                <br />
+                                Category :{" "}
+                                {orderItem.product[0].product_category}
+                                <br />
+                                Product Color : {orderItem.product_color} <br />
+                                Product Size : {orderItem.product_size} <br />
+                                Shipping Price :{orderItem.shipping_price}{" "}
+                                <br />
+                                Total Product : {orderItem.total_product}
+                              </h6>
+                              <div className="btn btn-danger">Delete Order</div>
+                            </div>
+                            <div className="col-md-3">
+                              <h5 className="card-title fw-bold">
+                                {formatPrice(
+                                  orderItem.product[0].product_price
+                                )}
+                              </h5>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ))
               )}
-
-              {/* {order && order.data[0].length === 0 ? (
-                <p>No orders found.</p>
-              ) : (
-                order &&
-                order.data[0].map((orderItem) => (
-                  <div
-                    id="card-items"
-                    className="card mt-1"
-                    // key={orderItem.order_id}
-                  >
-                    <p>{orderItem.order_id}</p> */}
-              {/* <div className="card-body">
-                      <div className="row d-flex align-items-center">
-                        <div className="col-auto">
-                          <img
-                            className="img-product"
-                            src={order.data?.path?.photo_path}
-                            alt="Image Product"
-                          />
-                        </div>
-                        <div className="col-md-7">
-                          <h6 className="card-title fw-bold">
-                            {orderItem.product.product_name} -{" "}
-                            {orderItem.productColor}
-                          </h6>
-                          <small className="text-muted">Code Crafters</small>
-                        </div>
-                        <div className="col-md-3 text-end">
-                          <h5 className="card-title fw-bold">
-                            {formatPrice(orderItem.product.product_price)}
-                          </h5>
-                        </div>
-                      </div>
-                    </div> */}
-              {/* </div>
-                ))
-              )} */}
             </div>
           </div>
-          {/* <div className="col-md-4">
+          <div className="col-md-4">
             <div id="card-summary" className="card">
               <div className="card-body">
                 <h6 className="card-title fw-bold">Shopping Summary</h6>
                 <div className="row mt-4 justify-content-between">
                   <div className="col-auto">
-                    <h6 className="fw-normal text-muted">Order</h6>
+                    <h6 className="fw-normal text-muted fw-bold">
+                      Total Product
+                    </h6>
                   </div>
                   <div className="col-auto">
-                    <h6 className="fw-bold">
-                      {formatPrice(product.product_price)} (
-                      {totalProduct})
-                    </h6>
+                    <h6 className="fw-bold">{totalProduct}</h6>
                   </div>
                 </div>
                 <div className="row justify-content-between">
                   <div className="col-auto">
-                    <h6 className="fw-normal text-muted">Delivery</h6>
+                    <h6 className="fw-normal text-muted fw-bold">
+                      Delivery (20.000)x{totalOrder}
+                    </h6>
                   </div>
-                  <div className="col-auto">
-                    <h6 className="fw-bold">{formatPrice(25000)}</h6>
-                  </div>
+                  <div className="col-auto fw-bold">{totalDelivery}</div>
                 </div>
+                {/* {order.length === 0 ? (
+                <p>No orders found.</p>
+              ) : (
+                order.map((orderItem, index) => (
+                  <div key={index}>
+                    <div className="row justify-content-between">
+                  <div className="col-auto">
+                    <h6 className="fw-normal text-muted fw-bold">
+                      {orderItem.}
+                    </h6>
+                  </div>
+                  <div className="col-auto fw-bold">{totalDelivery}</div>
+                </div>
+                  </div>
+                ))
+              )} */}
+
                 <hr className="solid" style={{ borderTop: "2px solid" }} />
                 <div className="row justify-content-between">
                   <div className="col-auto">
@@ -334,9 +320,10 @@ function Checkout() {
                   </div>
                   <div className="col-auto">
                     <h6 className="fw-bold" style={{ color: "#db3022" }}>
-                      {formatPrice(
+                      {/* {formatPrice(
                         product.product_price * totalProduct + 25000
-                      )}
+                      )} */}
+                      {formatPrice(totalPrice)}
                     </h6>
                   </div>
                 </div>
@@ -350,7 +337,7 @@ function Checkout() {
                 </button>
               </div>
             </div>
-          </div> */}
+          </div>
         </div>
       </section>
 

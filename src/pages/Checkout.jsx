@@ -162,13 +162,30 @@ function Checkout() {
     }
   };
 
+  const handleDeleteOrder = (orderId) => {
+    try {
+      const params = new URLSearchParams();
+      params.append("order_id", orderId);
+
+      axios
+        .delete(`${process.env.REACT_APP_BASE_URL}/order/delete-order`, {
+          data: params,
+        })
+        .then((response) => {
+          setOrder(order.filter((item) => item.order_id !== orderId));
+        });
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
   return (
     <div className="Checkout">
       <Navbar />
 
       <section id="content-checkout" className="container">
         <div className="row mb-3">
-          <h2 className="fw-bold lh-1">Checkout</h2>
+          <h2 className="fw-bold lh-1 mt-5">Checkout</h2>
         </div>
         <div className="row mt-4">
           <div className="col-md-8">
@@ -256,7 +273,14 @@ function Checkout() {
                                 <br />
                                 Total Product : {orderItem.total_product}
                               </h6>
-                              <div className="btn btn-danger">Delete Order</div>
+                              <div
+                                className="btn btn-danger"
+                                onClick={() =>
+                                  handleDeleteOrder(orderItem.order_id)
+                                }
+                              >
+                                Delete Order
+                              </div>
                             </div>
                             <div className="col-md-3">
                               <h5 className="card-title fw-bold">
@@ -330,7 +354,7 @@ function Checkout() {
                 <button
                   id="btn-payment"
                   type="button"
-                  className="btn btn-primary mt-3 border-2 border rounded-pill"
+                  className="btn btn-danger mt-3 border-2 border rounded-pill"
                   onClick={handleCheckOut}
                 >
                   Select payment

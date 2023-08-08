@@ -157,35 +157,40 @@ function MyOrder() {
               <ul>
                 {!loading ? (
                   order?.length > 0 ? (
-                    order.map((item, index) => {
-                      const product = products.find(
-                        (p) => p.product_id === item.product_id
-                      );
-                      return (
-                        <li key={index}>
-                          <>
-                            <img
-                              className="img-responsive object-fit-cover"
-                              src={product?.path[0]?.photo_path}
-                              alt="Product"
-                            />
-                            <div className="order-details">
-                              <h2>
-                                Order ID: {item.order_id || <Skeleton />}{" "}
-                              </h2>
-                              <p>
-                                Product: {product?.product_name || <Skeleton />}
-                              </p>
-                              <p>
-                                Quantity: {item.total_product || <Skeleton />}
-                              </p>
-                              <p>Harga: {item.total_price || <Skeleton />}</p>
-                              <p className="success-message">Success</p>
-                            </div>
-                          </>
-                        </li>
-                      );
-                    })
+                    order.map((orderItem, index) => (
+                      <li key={index}>
+                        <>
+                          {orderItem.path
+                            .slice(0, 1)
+                            .map((photo, photoIndex) => (
+                              <img
+                                className="img-responsive object-fit-cover"
+                                src={photo.photo_path}
+                                alt="Product"
+                              />
+                            ))}
+                          <div className="order-details">
+                            <h2>
+                              Order ID: {orderItem.order_id || <Skeleton />}
+                            </h2>
+                            <p>
+                              Product:
+                              {orderItem.product[0].product_name || (
+                                <Skeleton />
+                              )}
+                            </p>
+                            <p>
+                              Quantity:
+                              {orderItem.total_product || <Skeleton />}
+                            </p>
+                            <p>
+                              Harga: {orderItem.total_price || <Skeleton />}
+                            </p>
+                            <p className="success-message">Success</p>
+                          </div>
+                        </>
+                      </li>
+                    ))
                   ) : (
                     <p>Order Not Found</p>
                   )
@@ -193,7 +198,7 @@ function MyOrder() {
                   <li>
                     <>
                       <div className="order-details">
-                        <h2>{<Skeleton width={500} />} </h2>
+                        <h2>{<Skeleton width={500} />}</h2>
                         <p>{<Skeleton width={300} />}</p>
                         <p>{<Skeleton width={300} />}</p>
                         <p>{<Skeleton width={300} />}</p>

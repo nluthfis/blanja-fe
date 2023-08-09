@@ -25,6 +25,9 @@ function Profile() {
   const [currentProfilePhoto, setCurrentProfilePhoto] = useState(null);
   const [file, setFile] = useState(null);
 
+  console.log(name, phoneNumber, gender);
+  console.log(loading);
+
   useEffect(() => {
     if (localStorage.getItem("auth") === null) {
       window.location.href = "/login";
@@ -85,7 +88,11 @@ function Profile() {
         .patch(`${process.env.REACT_APP_BASE_URL}/edit/customer`, payload)
         .then((response) => {
           console.log("this is getting processed");
+          console.log(response);
           localStorage.setItem("userName", response?.data?.data[0].user_name);
+          setName(response?.data?.data[0].user_name);
+          setPhoneNumber(response?.data?.data[0].user_phonenumber);
+          setLoading(false);
         })
         .catch((error) => {
           console.log(error?.response?.data);
@@ -123,7 +130,7 @@ function Profile() {
 
   const handlePromise = (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const updateProfilePromise = new Promise((resolve, reject) => {
       handleUpdateProfile();
       resolve();
@@ -146,7 +153,7 @@ function Profile() {
           text: "Update Profile Success!",
           icon: "success",
         }).then(() => {
-          setLoading(true);
+          setLoading(false);
         });
         navigate("/profile");
       })

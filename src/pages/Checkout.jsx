@@ -148,6 +148,7 @@ function Checkout() {
       axios
         .post(`${process.env.REACT_APP_BASE_URL}/create-payment`)
         .then((result) => {
+          console.log(result);
           setLoading(false);
           console.log(result?.data?.transactionToken);
           window.snap.pay(result?.data?.data?.transactionToken);

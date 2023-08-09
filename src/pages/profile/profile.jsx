@@ -122,8 +122,8 @@ function Profile() {
   };
 
   const handlePromise = (e) => {
-    setLoading(true);
     e.preventDefault();
+
     const updateProfilePromise = new Promise((resolve, reject) => {
       handleUpdateProfile();
       resolve();

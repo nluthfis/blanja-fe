@@ -96,7 +96,7 @@ function Sidebar({ loading }) {
                   <div className="col">
                     <NavLink
                       className={({ isActive, isPending }) =>
-                        `text-decoration-none text-dark${
+                        `text-decoration-none text-dark ${
                           isActive ? "side-link-active" : ""
                         } ${isPending ? "" : "hide-on-mobile"}`
                       }

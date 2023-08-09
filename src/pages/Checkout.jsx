@@ -15,10 +15,7 @@ function Checkout() {
   const [address, setAddress] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [show, setShow] = useState(false);
-  // const product = location.state.product;
-  // const productSize = location.state.product_size;
-  // const productColor = location.state.product_color;
-  // const totalProduct = location.state.total_product;
+  const [errMsg, setErrMsg] = useState("");
   const address_name = useRef();
   const recipient_name = useRef();
   const recipient_phone_number = useRef();
@@ -26,7 +23,6 @@ function Checkout() {
   const postal_code = useRef();
   const city = useRef();
   const [order, setOrder] = useState([]);
-  console.log(order);
 
   let totalPrice = 0;
   let totalProduct = 0;
@@ -40,9 +36,6 @@ function Checkout() {
     totalOrder++;
   }
 
-  console.log("Total Price:", totalPrice);
-  console.log("Total Products:", totalProduct);
-
   useEffect(() => {
     setLoading(true);
     if (localStorage.getItem("auth") === null) {
@@ -53,7 +46,6 @@ function Checkout() {
         const result = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/order`
         );
-        console.log(result);
         setOrder(result.data.data);
       } catch (error) {
         console.log(error);
@@ -76,7 +68,7 @@ function Checkout() {
     getOrder();
     fetchData();
   }, []);
-
+  console.log(selectedAddress);
   useEffect(() => {
     if (loading) {
       Swal.fire({
@@ -106,7 +98,6 @@ function Checkout() {
       });
   };
 
-  // Function to change price to rupiah format
   const formatPrice = (price) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -115,29 +106,62 @@ function Checkout() {
   };
 
   const handleSubmitAddress = (e) => {
-    setLoading(true);
-    e.preventDefault();
-    axios
-      .post(`${process.env.REACT_APP_BASE_URL}/customer/address`, {
-        address_name: address_name.current.value,
-        recipient_name: recipient_name.current.value,
-        recipient_phone_number: recipient_phone_number.current.value,
-        address_data: address_data.current.value,
-        postal_code: postal_code.current.value,
-        city: city.current.value,
-      })
-      .then((result) => {
+    try {
+      setLoading(true);
+      e.preventDefault();
+
+      const validateField = (fieldValue, minLength, maxLength, fieldName) => {
+        if (
+          fieldValue === "" ||
+          fieldValue.length < minLength ||
+          fieldValue.length > maxLength
+        ) {
+          setErrMsg(
+            `${fieldName} can't be empty and must be between ${minLength} and ${maxLength} characters`
+          );
+          return false;
+        }
+        return true;
+      };
+
+      if (
+        !validateField(address_name.current.value, 3, 50, "Address name") ||
+        !validateField(recipient_name.current.value, 3, 50, "Recipient name") ||
+        !validateField(address_data.current.value, 3, 50, "Address") ||
+        !validateField(
+          recipient_phone_number.current.value,
+          8,
+          18,
+          "Recipient phone number"
+        ) ||
+        !validateField(postal_code.current.value, 5, 10, "Postal code") ||
+        !validateField(city.current.value, 5, 20, "City")
+      ) {
         setLoading(false);
-        console.log(result);
-        getAddress();
-        setAddress([...address, result?.data?.data]);
-        console.log(result?.data?.data);
-        handleClose();
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err);
-      });
+        return;
+      }
+      axios
+        .post(`${process.env.REACT_APP_BASE_URL}/customer/address`, {
+          address_name: address_name.current.value,
+          recipient_name: recipient_name.current.value,
+          recipient_phone_number: recipient_phone_number.current.value,
+          address_data: address_data.current.value,
+          postal_code: postal_code.current.value,
+          city: city.current.value,
+        })
+        .then((result) => {
+          setLoading(false);
+          getAddress();
+          setAddress([...address, result?.data?.data]);
+          handleClose();
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.log(err.response);
+        });
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   const handleClose = () => setShow(false);
@@ -145,17 +169,25 @@ function Checkout() {
 
   const handleCheckOut = () => {
     try {
+      setLoading(true);
+      console.log(selectedAddress);
+      if (selectedAddress === null || selectedAddress === undefined) {
+        Swal.fire({
+          title: "Failed",
+          text: "Select address first!",
+          icon: "error",
+        });
+        setLoading(false);
+        return;
+      }
       axios
         .post(`${process.env.REACT_APP_BASE_URL}/create-payment`)
         .then((result) => {
-          console.log(result);
           setLoading(false);
-          console.log(result?.data?.transactionToken);
           window.snap.pay(result?.data?.data?.transactionToken);
         })
         .catch((err) => {
           setLoading(false);
-          console.log(err);
         });
     } catch (err) {
       setLoading(false);
@@ -428,6 +460,7 @@ function Checkout() {
               <Accordion.Header>Add Address</Accordion.Header>
               <Accordion.Body>
                 <form onSubmit={handleSubmitAddress}>
+                  <div className="text-danger">{errMsg}</div>
                   <label for="allAddress" className="form-label">
                     Save address as (ex : home address, office address)
                   </label>
@@ -483,7 +516,7 @@ function Checkout() {
                     id="city"
                     ref={city}
                   />
-                  <button type="submit" class="btn btn-success">
+                  <button type="submit" class="btn btn-danger">
                     Add Address
                   </button>
                 </form>

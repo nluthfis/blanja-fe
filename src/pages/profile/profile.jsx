@@ -130,10 +130,11 @@ function Profile() {
 
   const handlePromise = (e) => {
     e.preventDefault();
-    setLoading(true);
+
     const updateProfilePromise = new Promise((resolve, reject) => {
       handleUpdateProfile();
       resolve();
+      setLoading(true);
     });
 
     let uploadPhotoPromise = Promise.resolve();
@@ -142,6 +143,7 @@ function Profile() {
       uploadPhotoPromise = new Promise((resolve, reject) => {
         handleUploadPhoto();
         resolve();
+        setLoading(true);
       });
     }
 

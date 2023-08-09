@@ -22,6 +22,7 @@ function SearchPage() {
         `${process.env.REACT_APP_BASE_URL}/product?keyword=${currentKeyword}`
       )
       .then((response) => {
+        console.log(response);
         const productData = response?.data?.data;
         setProducts(productData);
       });
@@ -45,8 +46,8 @@ function SearchPage() {
                     image={product?.path?.[0]?.photo_path}
                     title={product?.product_name}
                     price={product?.product_price}
-                    storeName={"Code Crafters"}
-                    rating={"4.8"}
+                    storeName={product?.product_category}
+                    rating={product?.score}
                   />
                 </div>
               ))

@@ -297,13 +297,11 @@ function Checkout() {
                                 Product Name :
                                 {orderItem.product[0].product_name}
                                 <br />
-                                Category :{" "}
+                                Category :
                                 {orderItem.product[0].product_category}
                                 <br />
                                 Product Color : {orderItem.product_color} <br />
                                 Product Size : {orderItem.product_size} <br />
-                                Shipping Price :{orderItem.shipping_price}{" "}
-                                <br />
                                 Total Product : {orderItem.total_product}
                               </h6>
                               <div

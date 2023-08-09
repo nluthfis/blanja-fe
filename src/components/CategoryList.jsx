@@ -92,7 +92,10 @@ function CategoryList() {
             </div>
 
             <div className="item" style={{ backgroundColor: "#5650D8" }}>
-              <Link to={"/category/high-heels"} style={{ textDecoration: "none" }}>
+              <Link
+                to={"/category/high-heels"}
+                style={{ textDecoration: "none" }}
+              >
                 <div
                   className="img-item"
                   style={{
@@ -105,7 +108,10 @@ function CategoryList() {
             </div>
 
             <div className="item" style={{ backgroundColor: "#B5D850" }}>
-              <Link to={"/category/wristwatch"} style={{ textDecoration: "none" }}>
+              <Link
+                to={"/category/wristwatch"}
+                style={{ textDecoration: "none" }}
+              >
                 <div
                   className="img-item"
                   style={{
@@ -131,7 +137,10 @@ function CategoryList() {
             </div>
 
             <div className="item" style={{ backgroundColor: "#AC50D8" }}>
-              <Link to={"/category/backpack"} style={{ textDecoration: "none" }}>
+              <Link
+                to={"/category/backpack"}
+                style={{ textDecoration: "none" }}
+              >
                 <div
                   className="img-item"
                   style={{
@@ -209,7 +218,10 @@ function CategoryList() {
             </div>
 
             <div className="item" style={{ backgroundColor: "#50D8AF" }}>
-              <Link to={"/category/format-suit"} style={{ textDecoration: "none" }}>
+              <Link
+                to={"/category/format-suit"}
+                style={{ textDecoration: "none" }}
+              >
                 <div
                   className="img-item"
                   style={{
@@ -222,7 +234,10 @@ function CategoryList() {
             </div>
 
             <div className="item" style={{ backgroundColor: "#D85050" }}>
-              <Link to={"/category/accessories"} style={{ textDecoration: "none" }}>
+              <Link
+                to={"/category/accessories"}
+                style={{ textDecoration: "none" }}
+              >
                 <div
                   className="img-item"
                   style={{

@@ -56,7 +56,7 @@ function Register() {
       },
     ];
 
-    let isValid = true; // Flag to track overall validity
+    let isValid = true;
 
     for (const validation of validations) {
       const {
@@ -134,7 +134,6 @@ function Register() {
           });
         })
         .catch((error) => {
-          console.log(error.response);
           Swal.fire({
             title: "Register Failed",
             text:

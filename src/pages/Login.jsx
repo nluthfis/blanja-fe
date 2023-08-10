@@ -24,6 +24,66 @@ function Login() {
   }, []);
 
   const handleLogin = () => {
+    const validations = [
+      {
+        field: email,
+        label: "Email",
+        required: true,
+        pattern: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/,
+        errorMsg: "Please enter a valid email address",
+      },
+      {
+        field: password,
+        label: "Password",
+        minLength: 3,
+        maxLength: 50,
+      },
+    ];
+
+    let isValid = true;
+
+    for (const validation of validations) {
+      const {
+        field,
+        label,
+        minLength,
+        maxLength,
+        pattern,
+        required,
+        errorMsg,
+      } = validation;
+
+      if (required && !field) {
+        isValid = false;
+        Swal.fire({
+          title: "Validation Error",
+          text: `Please enter ${label}`,
+          icon: "error",
+        });
+        return;
+      }
+
+      if (field && (field.length < minLength || field.length > maxLength)) {
+        isValid = false;
+        Swal.fire({
+          title: "Validation Error",
+          text: `${label} must be between ${minLength} and ${maxLength} characters`,
+          icon: "error",
+        });
+        return;
+      }
+
+      if (pattern && field && !pattern.test(field)) {
+        isValid = false;
+        Swal.fire({
+          title: "Validation Error",
+          text: errorMsg,
+          icon: "error",
+        });
+        return;
+      }
+    }
+
     Swal.fire({
       title: "Please wait...",
       allowOutsideClick: false,
@@ -32,40 +92,43 @@ function Login() {
       },
     });
 
-    const loginUrl =
-      userType === "customer"
-        ? `${process.env.REACT_APP_BASE_URL}/customer/login`
-        : `${process.env.REACT_APP_BASE_URL}/seller/login`;
+    if (isValid) {
+      const loginUrl =
+        userType === "customer"
+          ? `${process.env.REACT_APP_BASE_URL}/customer/login`
+          : `${process.env.REACT_APP_BASE_URL}/seller/login`;
 
-    axios
-      .post(loginUrl, {
-        user_email: email,
-        user_password: password,
-      })
-      .then((result) => {
-        Swal.fire({
-          title: "Login Success",
-          text: "Login success, redirect to app...",
-          icon: "success",
-        }).then(() => {
-          console.log(result);
-          localStorage.setItem("auth", "true");
-          localStorage.setItem("userId", result?.data?.data[0].user_id);
-          localStorage.setItem("userName", result?.data?.data[0].user_name);
-          localStorage.setItem("userPhoto", result?.data?.data[0].user_photo);
-          localStorage.setItem("token", result?.data?.token);
-          dispatch(addAuth(result));
-          navigate("/");
+      axios
+        .post(loginUrl, {
+          user_email: email,
+          user_password: password,
+        })
+        .then((result) => {
+          Swal.fire({
+            title: "Login Success",
+            text: "Login success, redirect to app...",
+            icon: "success",
+          }).then(() => {
+            console.log(result);
+            localStorage.setItem("auth", "true");
+            localStorage.setItem("userId", result?.data?.data[0].user_id);
+            localStorage.setItem("userName", result?.data?.data[0].user_name);
+            localStorage.setItem("userPhoto", result?.data?.data[0].user_photo);
+            localStorage.setItem("token", result?.data?.token);
+            dispatch(addAuth(result));
+            navigate("/");
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          Swal.fire({
+            title: "Login Failed",
+            text:
+              error?.response?.data?.message ?? "Something wrong in our app",
+            icon: "error",
+          });
         });
-      })
-      .catch((error) => {
-        console.log(error);
-        Swal.fire({
-          title: "Login Failed",
-          text: error?.response?.data?.message ?? "Something wrong in our app",
-          icon: "error",
-        });
-      });
+    }
   };
 
   return (

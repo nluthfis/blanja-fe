@@ -227,18 +227,6 @@ function ShipingAddres() {
                             />
                           </div>
                         </div>
-                        {/* 
-                        <div class="mb-3 form-check">
-                          <input
-                            type="checkbox"
-                            class="form-check-input"
-                            id="exampleCheck1"
-                          />
-
-                          <label class="form-check-label" for="exampleCheck1">
-                            Make it the primary address
-                          </label>
-                        </div> */}
                         <div className="modal-footer">
                           <button
                             type="button"

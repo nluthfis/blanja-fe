@@ -4,18 +4,17 @@ import Sidebar from "../../components/Sidebar";
 import axios from "axios";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Swal from "sweetalert2";
 
 function MyAddedProduct() {
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
-  //   console.log(product.data[0].product_name);
 
   useEffect(() => {
     setLoading(true);
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/seller/product`)
       .then((response) => {
-        console.log(response);
         setProduct(response?.data);
       })
       .catch((err) => {
@@ -25,6 +24,42 @@ function MyAddedProduct() {
         setLoading(false);
       });
   }, []);
+
+  const handleDeleteProduct = (productId) => {
+    axios
+      .delete(
+        `${process.env.REACT_APP_BASE_URL}/product?product_id=${productId}`,
+        {}
+      )
+      .then((result) => {
+        setProduct((prevProduct) => {
+          if (
+            prevProduct &&
+            prevProduct.data &&
+            Array.isArray(prevProduct.data)
+          ) {
+            const updatedData = prevProduct.data.filter(
+              (productItem) => productItem.product_id !== productId
+            );
+            return { ...prevProduct, data: updatedData };
+          }
+          return prevProduct;
+        });
+        Swal.fire({
+          title: "Success",
+          text: "Address Deleted!",
+          icon: "success",
+        });
+      })
+      .catch((error) => {
+        console.error(error?.response?.data?.message);
+        Swal.fire({
+          title: "Failed",
+          text: "Failed Delete Address",
+          icon: "error",
+        });
+      });
+  };
   return (
     <>
       <Navbar />
@@ -39,7 +74,7 @@ function MyAddedProduct() {
                 {!loading ? (
                   product.data?.length > 0 ? (
                     product.data.map((productItem, index) => (
-                      <li key={index}>
+                      <li key={productItem.product_id}>
                         <>
                           {productItem.path
                             .slice(0, 1)
@@ -64,6 +99,16 @@ function MyAddedProduct() {
                             </p>
                             <p>{productItem.product_price || <Skeleton />}</p>
                             <p>{productItem.product_size || <Skeleton />}</p>
+                          </div>
+                          <div>
+                            <button
+                              className="btn btn-danger btn-change-address"
+                              onClick={() =>
+                                handleDeleteProduct(productItem.product_id)
+                              }
+                            >
+                              Delete
+                            </button>
                           </div>
                         </>
                       </li>

@@ -7,12 +7,9 @@ import "../style/components/Sidebar.scss";
 import Skeleton from "react-loading-skeleton";
 import { useSelector } from "react-redux";
 function Sidebar({ loading }) {
-  // const auth = useSelector((state) => state?.auth);
-  // console.log(auth);
   const userPhoto = localStorage.getItem("userPhoto");
   const userName = localStorage.getItem("userName");
   const roles_id = Number(localStorage.getItem("roles_id"));
-  console.log(roles_id);
 
   return (
     <>

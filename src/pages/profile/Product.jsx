@@ -14,6 +14,7 @@ function Product() {
   const [productCondition, setProductCondition] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productImages, setProductImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleImageUpload = (event, index) => {
     const newImages = [...productImages];
@@ -25,6 +26,7 @@ function Product() {
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     const validations = [
       {
@@ -162,11 +164,6 @@ function Product() {
         }
       );
 
-      Swal.fire({
-        title: "Success",
-        text: "Success Add New Product!",
-        icon: "success",
-      });
       setProductName("");
       setProductCategory("");
       setProductPrice("");
@@ -175,6 +172,12 @@ function Product() {
       setProductCondition("");
       setProductDescription("");
       setProductImages([]);
+      Swal.fire({
+        title: "Success",
+        text: "Success Add New Product!",
+        icon: "success",
+      });
+      setLoading(false);
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -385,7 +388,7 @@ function Product() {
                       />
                     </div>
                   ))}
-                  <button class="btn btn-danger" type="submit">
+                  <button className="btn btn-danger" type="submit">
                     Input Product
                   </button>
                 </form>

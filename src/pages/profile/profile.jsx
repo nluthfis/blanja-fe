@@ -24,10 +24,9 @@ function Profile() {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [currentProfilePhoto, setCurrentProfilePhoto] = useState(null);
   const [file, setFile] = useState(null);
-
-  console.log(name, phoneNumber, gender);
-  console.log(loading);
-
+  const [roleId, setRoleId] = useState(null);
+  const [storeName, setStoreName] = useState("");
+  const [storeDescription, setStoreDescription] = useState("");
   useEffect(() => {
     if (localStorage.getItem("auth") === null) {
       window.location.href = "/login";
@@ -36,6 +35,7 @@ function Profile() {
       .get(`${process.env.REACT_APP_BASE_URL}/users`)
       .then((response) => {
         setName(response?.data?.data?.user_name);
+        setRoleId(response?.data?.data?.roles_id);
         setEmail(response?.data?.data?.user_email);
         setPhoneNumber(response?.data?.data?.user_phonenumber);
         setGender(response?.data?.data?.gender || "");
@@ -44,6 +44,8 @@ function Profile() {
         setDateOfBirth(response?.data?.data?.date_of_birth);
         setCurrentEmail(response?.data?.data?.user_email);
         setCurrentPassword(response?.data?.data?.user_password);
+        setStoreName(response?.data?.data?.name_store);
+        setStoreDescription(response?.data?.data?.store_description);
         setLoading(false);
       })
       .catch((error) => {
@@ -70,11 +72,10 @@ function Profile() {
   const handleUpdateProfile = async () => {
     try {
       setLoading(true);
+
       const payload = {
         user_name: name,
         user_phonenumber: phoneNumber,
-        gender: gender,
-        date_of_birth: dateOfBirth,
       };
 
       if (email !== currentEmail) {
@@ -84,22 +85,41 @@ function Profile() {
         payload.user_password = password;
       }
 
-      axios
-        .patch(`${process.env.REACT_APP_BASE_URL}/edit/customer`, payload)
-        .then((response) => {
-          console.log("this is getting processed");
-          console.log(response);
-          localStorage.setItem("userName", response?.data?.data[0].user_name);
-          setName(response?.data?.data[0].user_name);
-          setPhoneNumber(response?.data?.data[0].user_phonenumber);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error?.response?.data);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      let apiUrl;
+      if (roleId === 1) {
+        payload.gender = gender;
+        payload.date_of_birth = dateOfBirth;
+        apiUrl = `${process.env.REACT_APP_BASE_URL}/edit/customer`;
+      } else if (roleId === 2) {
+        payload.name_store = storeName;
+        payload.store_description = storeDescription;
+        apiUrl = `${process.env.REACT_APP_BASE_URL}/edit/seller`;
+      }
+
+      const response = await axios.patch(apiUrl, payload);
+
+      if (roleId === 1 && roleId === 2) {
+        localStorage.setItem("userName", response?.data?.data[0].user_name);
+        setName(response?.data?.data[0].user_name);
+        setPhoneNumber(response?.data?.data[0].user_phonenumber);
+      }
+
+      // axios
+      //   .patch(`${process.env.REACT_APP_BASE_URL}/edit/customer`, payload)
+      //   .then((response) => {
+      //     console.log("this is getting processed");
+      //     console.log(response);
+      //     localStorage.setItem("userName", response?.data?.data[0].user_name);
+      //     setName(response?.data?.data[0].user_name);
+      //     setPhoneNumber(response?.data?.data[0].user_phonenumber);
+      //     setLoading(false);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error?.response?.data);
+      //   })
+      //   .finally(() => {
+      //     setLoading(false);
+      //   });
     } catch (error) {}
   };
 
@@ -112,7 +132,6 @@ function Profile() {
         axios
           .patch(`${process.env.REACT_APP_BASE_URL}/users/photo`, formData)
           .then((response) => {
-            console.log("this is getting processed2");
             localStorage.setItem("userPhoto", response.data.data.user_photo);
             setCurrentProfilePhoto(response.data.data.user_photo);
           })
@@ -149,7 +168,6 @@ function Profile() {
 
     Promise.all([updateProfilePromise, uploadPhotoPromise])
       .then(() => {
-        console.log("Both functions completed successfully");
         Swal.fire({
           title: "Success",
           text: "Update Profile Success!",
@@ -265,67 +283,120 @@ function Profile() {
                         />
                       </div>
                     </div>
-                    <div className="mb-2 d-flex align-items-center">
-                      <label
-                        htmlFor="radio"
-                        className="col-sm-3 col-form-label "
-                      >
-                        Gender
-                      </label>
+                    {roleId === 1 && (
+                      <div>
+                        <div className="mb-2 d-flex align-items-center">
+                          <label
+                            htmlFor="radio"
+                            className="col-sm-3 col-form-label "
+                          >
+                            Gender
+                          </label>
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="inlineRadioOptions"
+                              id="inlineRadio1"
+                              value="Male"
+                              checked={gender === "Male"}
+                              onChange={handleGenderChange}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="inlineRadio1"
+                            >
+                              Male
+                            </label>
+                          </div>
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="inlineRadioOptions"
+                              id="inlineRadio2"
+                              value="Female"
+                              checked={gender === "Female"}
+                              onChange={handleGenderChange}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="inlineRadio2"
+                            >
+                              Female
+                            </label>
+                          </div>
+                        </div>
 
-                      <div className="form-check form-check-inline">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="inlineRadioOptions"
-                          id="inlineRadio1"
-                          value="Male"
-                          checked={gender === "Male"}
-                          onChange={handleGenderChange}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="inlineRadio1"
-                        >
-                          Male
-                        </label>
-                      </div>
+                        <div className="mb-2  row ">
+                          <label
+                            htmlFor="date"
+                            className="col-sm-3 col-form-label"
+                          >
+                            Date
+                          </label>
 
-                      <div className="form-check form-check-inline">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="inlineRadioOptions"
-                          id="inlineRadio2"
-                          value="Female"
-                          checked={gender === "Female"}
-                          onChange={handleGenderChange}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="inlineRadio2"
-                        >
-                          Female
-                        </label>
-                      </div>
-                    </div>
-                    <div className="mb-2  row ">
-                      <label htmlFor="date" className="col-sm-3 col-form-label">
-                        Date
-                      </label>
-
-                      <div className="col-12 col-md-5">
-                        <div className="input-group date">
-                          <input
-                            type="date"
-                            className="form-control"
-                            id="date"
-                            value={dateOfBirth || ""}
-                            onChange={(e) => setDateOfBirth(e.target.value)}
-                          />
+                          <div className="col-12 col-md-5">
+                            <div className="input-group date">
+                              <input
+                                type="date"
+                                className="form-control"
+                                id="date"
+                                value={dateOfBirth || ""}
+                                onChange={(e) => setDateOfBirth(e.target.value)}
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
+                    {roleId === 2 && (
+                      <div>
+                        <div className="mb-2 row ">
+                          <label
+                            htmlFor="storeName"
+                            className="col-sm-3 col-form-label"
+                          >
+                            Name store
+                          </label>
+                          <div className="col">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="storeName"
+                              value={storeName}
+                              onChange={(e) => {
+                                setStoreName(e.target.value);
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div className="mb-2 row ">
+                          <label
+                            htmlFor="storeName"
+                            className="col-sm-3 col-form-label"
+                          >
+                            Store description
+                          </label>
+                          <div className="col">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="storeDescription"
+                              value={
+                                storeDescription !== null
+                                  ? storeDescription
+                                  : "No description"
+                              }
+                              onChange={(e) => {
+                                setStoreDescription(e.target.value);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="mb-2 d-flex align-items-center"></div>
                   </div>
                   <div className="col-md-4 btn-label ">
                     <div className="d-flex flex-column align-items-center text-center">
@@ -336,8 +407,6 @@ function Profile() {
                         width="100"
                       />
                     </div>
-
-                    {/* --  input only image  --  */}
                     <input
                       type="file"
                       id="upload-image"
@@ -412,39 +481,78 @@ function Profile() {
                     )}
                   </div>
                 </div>
-
-                <div className="mb-2 row">
-                  <div htmlFor="radio" className="col-sm-3 col-form-div ">
-                    Gender
+                {roleId === 1 && (
+                  <div>
+                    <div className="mb-2 row ">
+                      <div htmlFor="radio" className="col-sm-3 col-form-div ">
+                        Gender
+                      </div>
+                      <div className="col">
+                        {!loading ? (
+                          gender ? (
+                            gender
+                          ) : (
+                            "Not Defined"
+                          )
+                        ) : (
+                          <Skeleton width={300} />
+                        )}
+                      </div>
+                    </div>
+                    <div className="mb-2 row">
+                      <div htmlFor="date" className="col-sm-3 col-form-div">
+                        Date
+                      </div>
+                      <div className="col">
+                        {!loading ? (
+                          dateOfBirth ? (
+                            dateOfBirth.substring(0, 10)
+                          ) : (
+                            "Not Defined"
+                          )
+                        ) : (
+                          <Skeleton width={300} />
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div className="col">
-                    {!loading ? (
-                      gender ? (
-                        gender
-                      ) : (
-                        "Not Defined"
-                      )
-                    ) : (
-                      <Skeleton width={300} />
-                    )}
+                )}
+                {roleId === 2 && (
+                  <div>
+                    <div className="mb-2 row ">
+                      <div htmlFor="radio" className="col-sm-3 col-form-div ">
+                        Store name
+                      </div>
+                      <div className="col">
+                        {!loading ? (
+                          storeName ? (
+                            storeName
+                          ) : (
+                            "Not Defined"
+                          )
+                        ) : (
+                          <Skeleton width={300} />
+                        )}
+                      </div>
+                    </div>
+                    <div className="mb-2 row ">
+                      <div htmlFor="radio" className="col-sm-3 col-form-div ">
+                        Store Description
+                      </div>
+                      <div className="col">
+                        {!loading ? (
+                          storeDescription ? (
+                            storeDescription
+                          ) : (
+                            "There is no store description"
+                          )
+                        ) : (
+                          <Skeleton width={300} />
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="mb-2 row">
-                  <div htmlFor="date" className="col-sm-3 col-form-div">
-                    Date
-                  </div>
-                  <div className="col">
-                    {!loading ? (
-                      dateOfBirth ? (
-                        dateOfBirth.substring(0, 10)
-                      ) : (
-                        "Not Defined"
-                      )
-                    ) : (
-                      <Skeleton width={300} />
-                    )}
-                  </div>
-                </div>
+                )}
               </>
             )}
           </div>

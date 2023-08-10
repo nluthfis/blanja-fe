@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../style/pages/Login.scss";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -10,19 +10,20 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("customer");
+  console.log(userType);
 
   const state = useSelector((reducer) => reducer.auth);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (localStorage.getItem("auth") === "true" || state.auth) {
       navigate("/");
     }
   }, []);
 
   const handleLogin = () => {
-    // show loading before axios finish
     Swal.fire({
       title: "Please wait...",
       allowOutsideClick: false,
@@ -31,8 +32,13 @@ function Login() {
       },
     });
 
+    const loginUrl =
+      userType === "customer"
+        ? `${process.env.REACT_APP_BASE_URL}/customer/login`
+        : `${process.env.REACT_APP_BASE_URL}/seller/login`;
+
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/customer/login`, {
+      .post(loginUrl, {
         user_email: email,
         user_password: password,
       })
@@ -87,7 +93,8 @@ function Login() {
                 name="btnradio"
                 id="custommer"
                 autoComplete="off"
-                checked
+                checked={userType === "customer"}
+                onChange={() => setUserType("customer")}
               />
               <label
                 style={{ height: "50px", width: "150px" }}
@@ -103,6 +110,8 @@ function Login() {
                 name="btnradio"
                 id="seller"
                 autoComplete="off"
+                checked={userType === "seller"}
+                onChange={() => setUserType("seller")}
               />
               <label
                 style={{ height: "50px", width: "150px" }}

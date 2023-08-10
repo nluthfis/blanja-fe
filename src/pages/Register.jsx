@@ -1,26 +1,26 @@
-import React from "react";
-import "../style/pages/Register.scss"
-import { Link, useNavigate } from "react-router-dom"
+import React, { useState, useEffect } from "react";
+import "../style/pages/Register.scss";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 function Register() {
   const navigate = useNavigate();
 
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone_number, setPhoneNumber] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone_number, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [storeName, setStoreName] = useState("");
+  const [userType, setUserType] = useState("customer");
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (localStorage.getItem("auth") === "true") {
       navigate("/");
     }
   }, []);
 
   const handleRegister = () => {
-
-    // show loading before axios finish
     Swal.fire({
       title: "Please wait...",
       allowOutsideClick: false,
@@ -28,14 +28,23 @@ function Register() {
         Swal.showLoading();
       },
     });
+    const registrationEndpoint =
+      userType === "customer"
+        ? `${process.env.REACT_APP_BASE_URL}/register/customer`
+        : `${process.env.REACT_APP_BASE_URL}/register/seller`;
+
+    const registrationData = {
+      user_name: name,
+      user_email: email,
+      user_phonenumber: phone_number,
+      user_password: password,
+      ...(userType === "seller" && { name_store: storeName }),
+    };
+
+    console.log(registrationData);
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/register/customer`, {
-        user_name: name,
-        user_email: email,
-        user_phonenumber: phone_number,
-        user_password: password,
-      })
+      .post(registrationEndpoint, registrationData)
       .then((result) => {
         Swal.fire({
           title: "Register Success",
@@ -46,6 +55,7 @@ function Register() {
         });
       })
       .catch((error) => {
+        console.log(error.response);
         Swal.fire({
           title: "Register Failed",
           text: error?.response?.data?.message ?? "Something wrong in our app",
@@ -56,8 +66,6 @@ function Register() {
         });
       });
   };
-
-
 
   return (
     <>
@@ -84,15 +92,15 @@ function Register() {
                 name="btnradio"
                 value="custommer"
                 id="custommer"
-                autocomplete="off"
-
-                checked
+                autoComplete="off"
+                checked={userType === "customer"}
+                onChange={() => setUserType("customer")}
               />
 
               <label
                 style={{ height: "50px", width: "150px" }}
                 className="btn btn-outline-danger btn-lg"
-                for="custommer"
+                htmlFor="custommer"
               >
                 Custommer
               </label>
@@ -103,13 +111,14 @@ function Register() {
                 value="seller"
                 name="btnradio"
                 id="seller"
-                autocomplete="off"
-
+                autoComplete="off"
+                checked={userType === "seller"}
+                onChange={() => setUserType("seller")}
               />
               <label
                 style={{ height: "50px", width: "150px" }}
                 className="btn btn-outline-danger btn-lg"
-                for="seller"
+                htmlFor="seller"
               >
                 Seller
               </label>
@@ -117,9 +126,10 @@ function Register() {
             <form
               onSubmit={(event) => {
                 event.preventDefault();
-              }}>
+              }}
+            >
               <div>
-                <label for="name" className="form-label"></label>
+                <label htmlFor="name" className="form-label"></label>
                 <input
                   type="name"
                   className="form-control form-control-lg"
@@ -131,7 +141,10 @@ function Register() {
               </div>
 
               <div>
-                <label for="exampleInputEmail1" className="form-label"></label>
+                <label
+                  htmlFor="exampleInputEmail1"
+                  className="form-label"
+                ></label>
                 <input
                   type="email"
                   className="form-control form-control-lg"
@@ -142,7 +155,10 @@ function Register() {
                 />
               </div>
               <div>
-                <label for="exampleInputPhone" className="form-label"></label>
+                <label
+                  htmlFor="exampleInputPhone"
+                  className="form-label"
+                ></label>
                 <input
                   type="text"
                   className="form-control form-control-lg"
@@ -154,7 +170,7 @@ function Register() {
               </div>
               <div className="mb-3">
                 <label
-                  for="exampleInputPassword1"
+                  htmlFor="exampleInputPassword1"
                   className="form-label"
                 ></label>
                 <input
@@ -165,6 +181,19 @@ function Register() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
+              {userType === "seller" && (
+                <div>
+                  <label htmlFor="name_store" className="form-label"></label>
+                  <input
+                    type="text"
+                    className="form-control form-control-lg"
+                    id="name_store"
+                    aria-describedby="name_store"
+                    placeholder="Store Name"
+                    onChange={(e) => setStoreName(e.target.value)}
+                  />
+                </div>
+              )}
 
               <div className="d-grid mt-5">
                 <button
@@ -179,10 +208,7 @@ function Register() {
 
             <small className="d-block text-center text-muted mt-4">
               Already have a account?
-              <Link
-                className="text-danger text-decoration-none"
-                to={"/login"}
-              >
+              <Link className="text-danger text-decoration-none" to={"/login"}>
                 Login
               </Link>
             </small>

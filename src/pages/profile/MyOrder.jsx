@@ -79,7 +79,6 @@ function MyOrder() {
                   }
                   to="#"
                 >
-                  {" "}
                   All items
                 </NavLink>
 

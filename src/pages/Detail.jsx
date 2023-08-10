@@ -27,6 +27,7 @@ function Detail() {
   const [countAmount, setCountAmount] = useState(1);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [productList, setProductList] = useState([]);
+  console.log(productList);
   const [photoProduct, setPhotoProduct] = useState([]);
   const [score, setScore] = useState(null);
   const [review, setReview] = useState([]);
@@ -63,6 +64,7 @@ function Detail() {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/product/${currentId}`)
       .then((result) => {
+        // console.log(result.data);
         setScore(result.data.data[0].score);
         setPhotoProduct(result.data.data[0].path);
         setCurrentProduct(result?.data?.data[0]);
@@ -475,7 +477,7 @@ function Detail() {
                 <div className="col" key={index}>
                   <ProductCard
                     productId={product?.product_id}
-                    image={product?.path[0].photo_path}
+                    image={product?.path}
                     title={product?.product_name}
                     price={product?.product_price}
                     storeName={product?.product_category}

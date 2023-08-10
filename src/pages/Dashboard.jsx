@@ -87,7 +87,7 @@ function Dashboard() {
                     <div className="col" key={index}>
                       <ProductCard
                         productId={newProduct?.product_id}
-                        image={newProduct?.path?.[0]?.photo_path}
+                        image={newProduct?.path}
                         title={newProduct?.product_name}
                         price={newProduct?.product_price}
                         storeName={newProduct?.product_category}
@@ -151,7 +151,7 @@ function Dashboard() {
                     <div className="col" key={newProduct?.product_id}>
                       <ProductCard
                         productId={newProduct?.product_id}
-                        image={newProduct?.path?.[0]?.photo_path}
+                        image={newProduct?.path}
                         title={newProduct?.product_name}
                         price={newProduct?.product_price}
                         storeName={newProduct?.product_category}

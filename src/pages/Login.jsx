@@ -13,7 +13,6 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("customer");
-  console.log(userType);
 
   const state = useSelector((reducer) => reducer.auth);
 
@@ -115,7 +114,8 @@ function Login() {
             localStorage.setItem("userName", result?.data?.data[0].user_name);
             localStorage.setItem("userPhoto", result?.data?.data[0].user_photo);
             localStorage.setItem("token", result?.data?.token);
-            dispatch(addAuth(result));
+            localStorage.setItem("roles_id", result?.data?.data[0].roles_id);
+            dispatch(addAuth(result.data));
             navigate("/");
           });
         })

@@ -22,12 +22,13 @@ import Profile from "./pages/profile/profile";
 import ShipingAddres from "./pages/profile/ShipingAddres";
 import MyOrder from "./pages/profile/MyOrder";
 import PaymentSuccess from "./pages/PaymentSuccess";
-import NotYetPaid from "./components/NotYetPaid"
+import NotYetPaid from "./components/NotYetPaid";
 import Packed from "./components/Packed";
 import Sent from "./components/Sent";
 import Completed from "./components/Completed";
 import OrderCancel from "./components/OrderCancel";
 import AllItems from "./components/AllItems";
+import Product from "./pages/profile/Product";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -134,7 +135,10 @@ const router = createBrowserRouter([
     path: "/order-cancel",
     element: <OrderCancel />,
   },
-
+  {
+    path: "/product",
+    element: <Product />,
+  },
 ]);
 
 function App() {

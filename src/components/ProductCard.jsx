@@ -4,7 +4,7 @@ import "../style/components/ProductCard.scss";
 import { Link } from "react-router-dom";
 
 function ProductCard({ productId, image, title, price, storeName, rating }) {
-  // Function to change price to rupiah format
+  console.log(image);
   const formatPrice = (price) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -30,7 +30,11 @@ function ProductCard({ productId, image, title, price, storeName, rating }) {
     <Link className="text-decoration-none" to={`/product/${productId}`}>
       <div className="ProductCard">
         <div className="card mt-3 mb-3 h-100">
-          <img src={image} className="card-img-top" alt="Product" />
+          <img
+            src={image[0].photo_path}
+            className="card-img-top"
+            alt="Product"
+          />
           <div className="card-body">
             <h5 className="product-title card-title">{title}</h5>
             <h5 className="price card-title" style={{ color: "#DB3022" }}>

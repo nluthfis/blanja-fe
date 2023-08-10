@@ -5,9 +5,14 @@ import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../style/components/Sidebar.scss";
 import Skeleton from "react-loading-skeleton";
+import { useSelector } from "react-redux";
 function Sidebar({ loading }) {
+  // const auth = useSelector((state) => state?.auth);
+  // console.log(auth);
   const userPhoto = localStorage.getItem("userPhoto");
   const userName = localStorage.getItem("userName");
+  const roles_id = Number(localStorage.getItem("roles_id"));
+  console.log(roles_id);
 
   return (
     <>
@@ -126,6 +131,28 @@ function Sidebar({ loading }) {
                     </NavLink>
                   </div>
                 </div>
+
+                {roles_id === 2 && (
+                  <div className="row align-items-center ms-5 mt-2 mb-2">
+                    <div className="col-auto pr-3">
+                      <NavLink to="/">
+                        <img src="/assets/img/history.png" alt="History Icon" />
+                      </NavLink>
+                    </div>
+                    <div className="col">
+                      <NavLink
+                        className={({ isActive, isPending }) =>
+                          `text-decoration-none text-dark ${
+                            isActive ? "side-link-active" : ""
+                          } ${isPending ? "" : "hide-on-mobile"}`
+                        }
+                        to="/product"
+                      >
+                        Product
+                      </NavLink>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

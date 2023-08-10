@@ -29,6 +29,7 @@ import Completed from "./components/Completed";
 import OrderCancel from "./components/OrderCancel";
 import AllItems from "./components/AllItems";
 import Product from "./pages/profile/Product";
+import MyAddedProduct from "./pages/profile/MyAddedProduct";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -138,6 +139,10 @@ const router = createBrowserRouter([
   {
     path: "/product",
     element: <Product />,
+  },
+  {
+    path: "/my-added-product",
+    element: <MyAddedProduct />,
   },
 ]);
 

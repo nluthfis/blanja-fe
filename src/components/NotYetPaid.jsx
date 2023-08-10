@@ -12,13 +12,10 @@ function NotYetPaid() {
         <div className="page-content ">
           <div className="container-fluid">
             <h4>My order</h4>
-         
-<NavbarOrder/>
+
+            <NavbarOrder />
             <div className="my-order">
               <h1>Empty</h1>
-            
-
-
             </div>
           </div>
         </div>

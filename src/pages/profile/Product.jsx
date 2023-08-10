@@ -23,7 +23,6 @@ function Product() {
   const handleConditionChange = (event) => {
     setProductCondition(event.target.value);
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -80,7 +79,7 @@ function Product() {
         field: productDescription,
         label: "Product Description",
         minLength: 3,
-        maxLength: 50,
+        maxLength: 500,
         required: true,
         errorMsg:
           "Please enter a valid Product Description  (3 to 50 characters, letters and spaces only)",
@@ -187,10 +186,10 @@ function Product() {
       <main id="my-order">
         <div className="page-content ">
           <div className="container-fluid">
-            <h4>Product</h4>
+            <h4>Add Product</h4>
             <div className="row mt-3 my-order-nav">
               <div className="col-12 text-link text-decoration-none">
-                <NavLink
+                {/* <NavLink
                   className={({ isActive, isPending }) =>
                     isPending
                       ? " text-decoration-none"
@@ -198,10 +197,10 @@ function Product() {
                       ? "text-on text-decoration-none"
                       : "text-decoration-none"
                   }
-                  to="#"
+                  to="/add-product"
                 >
                   Add Product
-                </NavLink>
+                </NavLink> */}
               </div>
             </div>
             <hr />
@@ -311,7 +310,7 @@ function Product() {
                       />
                     </div>
                   </div>
-                  <div className="mb-2 row ">
+                  <div className="mb-2 row">
                     <label
                       htmlFor="product_description"
                       className="col-sm-3 col-form-label"
@@ -319,17 +318,17 @@ function Product() {
                       Description
                     </label>
                     <div className="col">
-                      <input
-                        type="text"
+                      <textarea
                         className="form-control"
                         id="product_description"
                         value={productDescription}
                         onChange={(e) => {
                           setProductDescription(e.target.value);
                         }}
-                      />
+                      ></textarea>
                     </div>
                   </div>
+
                   <div className="mb-2 d-flex align-items-center">
                     <label htmlFor="radio" className="col-sm-3 col-form-label ">
                       Condition

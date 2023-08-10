@@ -43,7 +43,7 @@ function SearchPage() {
                 <div className="col">
                   <ProductCard
                     productId={product?.product_id}
-                    image={product?.path?.[0]?.photo_path}
+                    image={product?.path}
                     title={product?.product_name}
                     price={product?.product_price}
                     storeName={product?.product_category}

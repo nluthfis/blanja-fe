@@ -91,26 +91,30 @@ function Sidebar({ loading }) {
                     </NavLink>
                   </div>
                 </div>
-
-                <div className="row align-items-center ms-5 mt-2 mb-2">
-                  <div className="col-auto pr-3">
-                    <NavLink to="/shipping-address">
-                      <img src="/assets/img/location.png" alt="Location Icon" />
-                    </NavLink>
+                {roles_id === 1 && (
+                  <div className="row align-items-center ms-5 mt-2 mb-2">
+                    <div className="col-auto pr-3">
+                      <NavLink to="/shipping-address">
+                        <img
+                          src="/assets/img/location.png"
+                          alt="Location Icon"
+                        />
+                      </NavLink>
+                    </div>
+                    <div className="col">
+                      <NavLink
+                        className={({ isActive, isPending }) =>
+                          `text-decoration-none text-dark ${
+                            isActive ? "side-link-active" : ""
+                          } ${isPending ? "" : "hide-on-mobile"}`
+                        }
+                        to="/shipping-address"
+                      >
+                        Shipping Address
+                      </NavLink>
+                    </div>
                   </div>
-                  <div className="col">
-                    <NavLink
-                      className={({ isActive, isPending }) =>
-                        `text-decoration-none text-dark ${
-                          isActive ? "side-link-active" : ""
-                        } ${isPending ? "" : "hide-on-mobile"}`
-                      }
-                      to="/shipping-address"
-                    >
-                      Shipping Address
-                    </NavLink>
-                  </div>
-                </div>
+                )}
 
                 <div className="row align-items-center ms-5 mt-2 mb-2">
                   <div className="col-auto pr-3">
@@ -131,25 +135,51 @@ function Sidebar({ loading }) {
                     </NavLink>
                   </div>
                 </div>
-
                 {roles_id === 2 && (
-                  <div className="row align-items-center ms-5 mt-2 mb-2">
-                    <div className="col-auto pr-3">
-                      <NavLink to="/">
-                        <img src="/assets/img/history.png" alt="History Icon" />
-                      </NavLink>
+                  <div>
+                    <div className="row align-items-center ms-5 mt-2 mb-2">
+                      <div className="col-auto pr-3">
+                        <NavLink to="/">
+                          <img
+                            src="/assets/img/history.png"
+                            alt="History Icon"
+                          />
+                        </NavLink>
+                      </div>
+                      <div className="col">
+                        <NavLink
+                          className={({ isActive, isPending }) =>
+                            `text-decoration-none text-dark ${
+                              isActive ? "side-link-active" : ""
+                            } ${isPending ? "" : "hide-on-mobile"}`
+                          }
+                          to="/product"
+                        >
+                          Product
+                        </NavLink>
+                      </div>
                     </div>
-                    <div className="col">
-                      <NavLink
-                        className={({ isActive, isPending }) =>
-                          `text-decoration-none text-dark ${
-                            isActive ? "side-link-active" : ""
-                          } ${isPending ? "" : "hide-on-mobile"}`
-                        }
-                        to="/product"
-                      >
-                        Product
-                      </NavLink>
+                    <div className="row align-items-center ms-5 mt-3 mb-2">
+                      <div className="col-auto pr-3">
+                        <NavLink to="/">
+                          <img
+                            src="/assets/img/history.png"
+                            alt="History Icon"
+                          />
+                        </NavLink>
+                      </div>
+                      <div className="col">
+                        <NavLink
+                          className={({ isActive, isPending }) =>
+                            `text-decoration-none text-dark ${
+                              isActive ? "side-link-active" : ""
+                            } ${isPending ? "" : "hide-on-mobile"}`
+                          }
+                          to="/my-added-product"
+                        >
+                          My Product
+                        </NavLink>
+                      </div>
                     </div>
                   </div>
                 )}

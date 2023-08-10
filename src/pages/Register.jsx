@@ -21,6 +21,85 @@ function Register() {
   }, []);
 
   const handleRegister = () => {
+    const validations = [
+      {
+        field: name,
+        label: "Name",
+        minLength: 3,
+        maxLength: 50,
+        pattern: /^[A-Za-z ]+$/,
+        errorMsg:
+          "Please enter a valid name (3 to 50 characters, letters and spaces only)",
+      },
+      {
+        field: email,
+        label: "Email",
+        required: true,
+        pattern: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/,
+        errorMsg: "Please enter a valid email address",
+      },
+      {
+        field: phone_number,
+        label: "Phone Number",
+        minLength: 8,
+        maxLength: 18,
+        pattern: /^\d+$/,
+        errorMsg: "Please enter a valid phone number (8 to 18 digits)",
+      },
+      { field: password, label: "Password", minLength: 3, maxLength: 50 },
+      {
+        field: storeName,
+        label: "Store Name",
+        minLength: 3,
+        maxLength: 50,
+        required: userType === "seller",
+      },
+    ];
+
+    let isValid = true; // Flag to track overall validity
+
+    for (const validation of validations) {
+      const {
+        field,
+        label,
+        minLength,
+        maxLength,
+        pattern,
+        required,
+        errorMsg,
+      } = validation;
+
+      if (required && !field) {
+        isValid = false;
+        Swal.fire({
+          title: "Validation Error",
+          text: `Please enter ${label}`,
+          icon: "error",
+        });
+        return;
+      }
+
+      if (field && (field.length < minLength || field.length > maxLength)) {
+        isValid = false;
+        Swal.fire({
+          title: "Validation Error",
+          text: `${label} must be between ${minLength} and ${maxLength} characters`,
+          icon: "error",
+        });
+        return;
+      }
+
+      if (pattern && field && !pattern.test(field)) {
+        isValid = false;
+        Swal.fire({
+          title: "Validation Error",
+          text: errorMsg,
+          icon: "error",
+        });
+        return;
+      }
+    }
+
     Swal.fire({
       title: "Please wait...",
       allowOutsideClick: false,
@@ -28,43 +107,45 @@ function Register() {
         Swal.showLoading();
       },
     });
-    const registrationEndpoint =
-      userType === "customer"
-        ? `${process.env.REACT_APP_BASE_URL}/register/customer`
-        : `${process.env.REACT_APP_BASE_URL}/register/seller`;
 
-    const registrationData = {
-      user_name: name,
-      user_email: email,
-      user_phonenumber: phone_number,
-      user_password: password,
-      ...(userType === "seller" && { name_store: storeName }),
-    };
+    if (isValid) {
+      const registrationEndpoint =
+        userType === "customer"
+          ? `${process.env.REACT_APP_BASE_URL}/register/customer`
+          : `${process.env.REACT_APP_BASE_URL}/register/seller`;
 
-    console.log(registrationData);
+      const registrationData = {
+        user_name: name,
+        user_email: email,
+        user_phonenumber: phone_number,
+        user_password: password,
+        ...(userType === "seller" && { name_store: storeName }),
+      };
 
-    axios
-      .post(registrationEndpoint, registrationData)
-      .then((result) => {
-        Swal.fire({
-          title: "Register Success",
-          text: "Register success, please login...",
-          icon: "success",
-        }).then(() => {
-          navigate("/login");
+      axios
+        .post(registrationEndpoint, registrationData)
+        .then((result) => {
+          Swal.fire({
+            title: "Register Success",
+            text: "Register success, please login...",
+            icon: "success",
+          }).then(() => {
+            navigate("/login");
+          });
+        })
+        .catch((error) => {
+          console.log(error.response);
+          Swal.fire({
+            title: "Register Failed",
+            text:
+              error?.response?.data?.message ?? "Something wrong in our app",
+            icon: "error",
+            confirmButtonText: "Ok",
+            allowOutsideClick: false,
+            timer: 3000,
+          });
         });
-      })
-      .catch((error) => {
-        console.log(error.response);
-        Swal.fire({
-          title: "Register Failed",
-          text: error?.response?.data?.message ?? "Something wrong in our app",
-          icon: "error",
-          confirmButtonText: "Ok",
-          allowOutsideClick: false,
-          timer: 3000,
-        });
-      });
+    }
   };
 
   return (
@@ -137,6 +218,7 @@ function Register() {
                   aria-describedby="name"
                   placeholder="Name"
                   onChange={(e) => setName(e.target.value)}
+                  required
                 />
               </div>
 
@@ -152,6 +234,7 @@ function Register() {
                   aria-describedby="emailHelp"
                   placeholder="Email"
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
               <div>
@@ -163,9 +246,10 @@ function Register() {
                   type="text"
                   className="form-control form-control-lg"
                   id="exampleInputPhone"
-                  aria-describedby="emailHelp"
+                  aria-describedby="PhoneNumber"
                   placeholder="Phone Number"
                   onChange={(e) => setPhoneNumber(e.target.value)}
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -179,6 +263,7 @@ function Register() {
                   id="exampleInputPassword1"
                   placeholder="Password"
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
               {userType === "seller" && (
@@ -191,6 +276,7 @@ function Register() {
                     aria-describedby="name_store"
                     placeholder="Store Name"
                     onChange={(e) => setStoreName(e.target.value)}
+                    required
                   />
                 </div>
               )}

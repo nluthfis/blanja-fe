@@ -132,6 +132,7 @@ function Product() {
     }
 
     if (!isValid) {
+      setLoading(false);
       Swal.fire({
         title: "Validation Error",
         text: errorMessages.join("\n"),
@@ -154,15 +155,11 @@ function Product() {
     });
 
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/product`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.post(`${process.env.REACT_APP_BASE_URL}/product`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       setProductName("");
       setProductCategory("");
@@ -176,11 +173,15 @@ function Product() {
         title: "Success",
         text: "Success Add New Product!",
         icon: "success",
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
       }).then(() => {
         setLoading(false);
       });
     } catch (error) {
       console.error("Error submitting form:", error);
+      setLoading(false);
     }
   };
   return (

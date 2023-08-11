@@ -76,7 +76,7 @@ function Detail() {
             `${process.env.REACT_APP_BASE_URL}/product?category=${result?.data?.data[0].product_category}`
           )
           .then((response) => {
-            const id_now = Number(currentId);
+            const id_now = currentId;
             const relatedProductData = response?.data?.data;
             const updatedProductList = relatedProductData.filter(
               (product) => product.product_id !== id_now
@@ -98,17 +98,6 @@ function Detail() {
     setImageId(img);
   };
 
-  // const incrementSize = () => {
-  //   setCountSize(countSize + 1);
-  // };
-
-  // const decrementSize = () => {
-  //   setCountSize(countSize - 1);
-  //   if (countSize < 2) {
-  //     setCountSize(1);
-  //   }
-  // };
-
   const incrementAmount = () => {
     setCountAmount(countAmount + 1);
   };
@@ -120,18 +109,6 @@ function Detail() {
     }
   };
 
-  // Function to handle buy now button
-  // const handleBuyNow = () => {
-  //   navigate("/checkout", {
-  // state: {
-  //   product: currentProduct,
-  //   product_size: selectedSize,
-  //   product_color: selectedColor,
-  //   total_product: countAmount,
-  // },
-  //   });
-  // };
-
   // Function to change price to rupiah format
   const formatPrice = (price) => {
     return new Intl.NumberFormat("id-ID", {
@@ -139,17 +116,6 @@ function Detail() {
       currency: "IDR",
     }).format(price);
   };
-  // const [address, setAddress] = useState([]);
-  // const handleGetAddress = () => {
-  //   axios
-  //     .get(`${process.env.REACT_APP_BASE_URL}address`)
-  //     .then((result) => {
-  //       setAddress(result?.data?.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
 
   const renderStars = () => {
     const starCount = Math.round(score);

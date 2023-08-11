@@ -21,11 +21,6 @@ The Blanja project is built using the following technologies:
 - Node.Js (JavaScript runtime)
 - Axios (HTTP client)
 
-## Project Repository 📂🔗
-
-The backend repository for this project can be found on GitHub at the following link:
-[Blanja Backend Repository](https://github.com/nluthfis/blanja-fe)
-
 ## Features ✨🛍️👕👖
 
 - User-friendly e-commerce website with a focus on fashion products
@@ -68,13 +63,32 @@ The backend repository for this project can be found on GitHub at the following 
    <tr>
     <td>Profile Page Section MyOrder</td>
     <td>Check Out Page</td>
-     <td>Payment Page</td>
   </tr>
   <tr>
     <td><img width="350px" src="/documentation/myorder.png" border="0" alt="myorder" /></td>
     <td> <img width="350px" src="./documentation/checkout.png" border="0"  alt="checkout" /></td>
-    <td> <img width="350px" src="./documentation/payment.png" border="0"  alt="payment" /></td>
   </tr>
+  <tr>
+    <td>Payment Midtrans Snap</td>
+    <td>Midtrans Sandbox simulator</td>
+    <td>Success Payment snap</td>
+  </tr>
+  <tr>
+    <td><img width="350px" src="/documentation/payment.png" border="0" alt="myorder" /></td>
+    <td> <img width="350px" src="./documentation/payment2.png" border="0"  alt="checkout" /></td>
+    <td> <img width="350px" src="./documentation/payment3.png" border="0"  alt="payment" /></td>
+  </tr>
+     <tr>
+    <td>Search Result Page</td>
+    <td>Add Product Seller Page</td>
+    <td>My Product Seller Page</td>
+  </tr>
+  <tr>
+    <td><img width="350px" src="/documentation/search.png" border="0" alt="search" /></td>
+    <td> <img width="350px" src="./documentation/seller_add_product.png" border="0"  alt="addProduct" /></td>
+    <td> <img width="350px" src="./documentation/seller_my_product.png" border="0"  alt="MyProduct" /></td>
+  </tr>
+
 </table>
 
 ## Getting Started 🏁🚀
@@ -98,7 +112,7 @@ As the specific licensing information for "Blanja" may vary based on the project
 
 ## Related Project
 
-[Demo Website](https://blanja-fe-sigma.vercel.app) <br/>
+[Demo Website](https://blanja-web.vercel.app) <br/>
 [Backend Blanja](https://github.com/nluthfis/blanja-be)
 
 Thank you for exploring my Blanja portfolio. "Blanja" has been an exciting project to work on, and we hope that it showcases our skills and passion for creating an engaging e-commerce platform. Happy shopping! 🛍️👠👗

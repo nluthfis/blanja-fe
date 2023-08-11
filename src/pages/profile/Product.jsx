@@ -176,8 +176,9 @@ function Product() {
         title: "Success",
         text: "Success Add New Product!",
         icon: "success",
+      }).then(() => {
+        setLoading(false);
       });
-      setLoading(false);
     } catch (error) {
       console.error("Error submitting form:", error);
     }

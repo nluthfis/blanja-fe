@@ -138,8 +138,9 @@ function Sidebar({ loading }) {
                       <div className="col-auto pr-3">
                         <NavLink to="/">
                           <img
-                            src="/assets/img/history.png"
+                            src="/assets/img/add-to-basket.png"
                             alt="History Icon"
+                            style={{ width: "4.3vh" }}
                           />
                         </NavLink>
                       </div>
@@ -152,7 +153,7 @@ function Sidebar({ loading }) {
                           }
                           to="/product"
                         >
-                          Product
+                          Add Product
                         </NavLink>
                       </div>
                     </div>
@@ -160,7 +161,7 @@ function Sidebar({ loading }) {
                       <div className="col-auto pr-3">
                         <NavLink to="/">
                           <img
-                            src="/assets/img/history.png"
+                            src="/assets/img/package.png"
                             alt="History Icon"
                           />
                         </NavLink>

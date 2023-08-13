@@ -28,7 +28,6 @@ function MyOrder() {
       .then((result) => {
         setLoading(false);
         setOrder(result?.data?.data);
-        console.log(result);
         getProductsByIds(result?.data?.data);
       })
       .catch((err) => {
@@ -60,7 +59,7 @@ function MyOrder() {
   };
 
   return (
-    <>
+    <div className="profile" style={{ overflowX: "hidden" }}>
       <Navbar />
       <Sidebar />
       <main id="my-order">
@@ -82,6 +81,7 @@ function MyOrder() {
                                 className="img-responsive object-fit-cover"
                                 src={photo.photo_path}
                                 alt="Product"
+                                key={photoIndex}
                               />
                             ))}
                           <div className="order-details">
@@ -129,7 +129,7 @@ function MyOrder() {
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }
 

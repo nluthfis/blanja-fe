@@ -4,7 +4,6 @@ import "../style/components/ProductCard.scss";
 import { Link } from "react-router-dom";
 
 function ProductCard({ productId, image, title, price, storeName, rating }) {
-  console.log(image);
   const formatPrice = (price) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",

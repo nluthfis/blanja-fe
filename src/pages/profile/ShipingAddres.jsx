@@ -99,7 +99,7 @@ function ShipingAddres() {
   };
 
   return (
-    <>
+    <div className="profile" style={{ overflowX: "hidden" }}>
       <Navbar />
       <Sidebar />
 
@@ -314,7 +314,7 @@ function ShipingAddres() {
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }
 

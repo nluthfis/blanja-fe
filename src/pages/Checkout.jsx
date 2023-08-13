@@ -68,7 +68,6 @@ function Checkout() {
     getOrder();
     fetchData();
   }, []);
-  console.log(selectedAddress);
   useEffect(() => {
     if (loading) {
       Swal.fire({

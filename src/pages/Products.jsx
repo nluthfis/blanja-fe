@@ -18,46 +18,48 @@ function Products() {
     window.scrollTo(0, 0);
 
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/product?category=${currentKeyword}`)
+      .get(
+        `${process.env.REACT_APP_BASE_URL}/product?category=${currentKeyword}`
+      )
       .then((response) => {
         const productData = response?.data?.data;
         setProducts(productData);
       });
-
   }, []);
 
   return (
-    <div className="ProductList">
+    <div className="ProductList" style={{ overflowX: "hidden" }}>
       <Navbar />
 
       <section id="category">
         <div className="container mt-4">
           <div className="row">
-            <h2 className="fw-bold lh-1">{currentKeyword}</h2>
+            <h2
+              className="fw-bold lh-1"
+              style={{ textTransform: "capitalize" }}
+            >
+              {currentKeyword}
+            </h2>
           </div>
           <div className="row row-cols-md-5 rows-cols-xs-2">
-            {
-              
-              products?.length > 0? (
-                products.map((product) => (
-                  <div className="col">
-                    <ProductCard
-                      productId={product?.product_id}
-                      image={product?.path?.[0]?.photo_path}
-                      title={product?.product_name}
-                      price={product?.product_price}
-                      storeName={"Code Crafters"}
-                      rating={"4.8"}
-                    />
-                  </div>
-                ))
-              ) : (
-                <div className="col-12 col-md-12 col-lg-12 col-xl-12 mt-5">
-                  <p className="text-center">No products found</p>
+            {products?.length > 0 ? (
+              products.map((product) => (
+                <div className="col" key={product?.product_id}>
+                  <ProductCard
+                    productId={product?.product_id}
+                    image={product?.path}
+                    title={product?.product_name}
+                    price={product?.product_price}
+                    storeName={product?.product_category}
+                    rating={product.score}
+                  />
                 </div>
-              )
-  
-            }
+              ))
+            ) : (
+              <div className="col-12 col-md-12 col-lg-12 col-xl-12 mt-5">
+                <p className="text-center">No products found</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

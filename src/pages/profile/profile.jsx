@@ -193,7 +193,7 @@ function Profile() {
   };
 
   return (
-    <>
+    <div className="profile" style={{ overflowX: "hidden" }}>
       <Navbar />
       <Sidebar
         userName={name}
@@ -558,7 +558,7 @@ function Profile() {
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }
 

@@ -185,7 +185,7 @@ function Product() {
     }
   };
   return (
-    <>
+    <div className="product" style={{ overflowX: "hidden" }}>
       <Navbar />
       <Sidebar />
       <main id="my-order">
@@ -399,7 +399,7 @@ function Product() {
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }
 

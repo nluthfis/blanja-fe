@@ -14,11 +14,9 @@ function AllItems() {
         <div className="page-content ">
           <div className="container-fluid">
             <h4>My order</h4>
-      
-<NavbarOrder/>
-<CardOrder/>
 
-
+            <NavbarOrder />
+            <CardOrder />
           </div>
         </div>
       </main>

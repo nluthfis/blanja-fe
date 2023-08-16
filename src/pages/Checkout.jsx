@@ -3,14 +3,12 @@ import "../style/pages/Checkout.scss";
 import React, { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Accordion from "react-bootstrap/Accordion";
 import Swal from "sweetalert2";
 
 function Checkout() {
-  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -44,7 +42,7 @@ function Checkout() {
     const getOrder = async () => {
       try {
         const result = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/order`
+          `${process.env.REACT_APP_BASE_URL}/order?statusOrder=order_created`
         );
         setOrder(result.data.data);
       } catch (error) {
@@ -166,10 +164,14 @@ function Checkout() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const requestData = {
+    statusOrder: order[0]?.status,
+    order_id_payment: order[0]?.order_id_payment,
+  };
+
   const handleCheckOut = () => {
     try {
       setLoading(true);
-      console.log(selectedAddress);
       if (selectedAddress === null || selectedAddress === undefined) {
         Swal.fire({
           title: "Failed",
@@ -180,9 +182,10 @@ function Checkout() {
         return;
       }
       axios
-        .post(`${process.env.REACT_APP_BASE_URL}/create-payment`)
+        .post(`${process.env.REACT_APP_BASE_URL}/create-payment`, requestData)
         .then((result) => {
           setLoading(false);
+          console.log(result, "result");
           window.snap.pay(result?.data?.data?.transactionToken);
         })
         .catch((err) => {
@@ -513,7 +516,7 @@ function Checkout() {
                     id="city"
                     ref={city}
                   />
-                  <button type="submit" class="btn btn-danger">
+                  <button type="submit" className="btn btn-danger">
                     Add Address
                   </button>
                 </form>

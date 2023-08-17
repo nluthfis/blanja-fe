@@ -145,9 +145,9 @@ function MyOrder() {
                                       </p>
                                       <p>Quantity: {product.total_product}</p>
                                       <p>Harga: {product.total_price}</p>
+                                      <p>Status: {product.status}</p>
                                     </div>
                                   ))}
-                                  <p className="success-message">Success</p>
                                 </div>
                               </>
                             </li>

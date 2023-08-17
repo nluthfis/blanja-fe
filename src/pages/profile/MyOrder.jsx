@@ -78,6 +78,28 @@ function MyOrder() {
     });
   };
 
+  const groupProductsByTransaction = (orders) => {
+    const groupedProducts = {};
+
+    orders.forEach((orderItem) => {
+      const { transaction_token, ...rest } = orderItem;
+      if (!groupedProducts[transaction_token]) {
+        groupedProducts[transaction_token] = [rest];
+      } else {
+        groupedProducts[transaction_token].push(rest);
+      }
+    });
+
+    return groupedProducts;
+  };
+
+  const groupedOrders = groupProductsByTransaction(order);
+  console.log(groupedOrders);
+
+  const handlePayment = (transactionToken) => {
+    window.snap.pay(transactionToken);
+  };
+
   return (
     <div className="profile" style={{ overflowX: "hidden" }}>
       <Navbar />
@@ -96,10 +118,38 @@ function MyOrder() {
                 <div className="my-order">
                   <ul>
                     {!loading ? (
-                      order?.length > 0 ? (
-                        order.map((orderItem, index) => (
-                          <OrderItem key={index} orderItem={orderItem} />
-                        ))
+                      Object.keys(groupedOrders).length > 0 ? (
+                        Object.entries(groupedOrders).map(
+                          ([token, products], index) => (
+                            <li key={index}>
+                              <>
+                                {/* Display products for the current token */}
+                                {products.map((product, productIndex) => (
+                                  <img
+                                    className="img-responsive object-fit-cover"
+                                    src={product.path[0]?.photo_path}
+                                    alt="Product"
+                                    key={productIndex}
+                                  />
+                                ))}
+                                <div className="order-details">
+                                  <h2>Transaction Token: {token}</h2>
+                                  {products.map((product, productIndex) => (
+                                    <div key={productIndex}>
+                                      <p>
+                                        Product:{" "}
+                                        {product.product[0].product_name}
+                                      </p>
+                                      <p>Quantity: {product.total_product}</p>
+                                      <p>Harga: {product.total_price}</p>
+                                    </div>
+                                  ))}
+                                  <p className="success-message">Success</p>
+                                </div>
+                              </>
+                            </li>
+                          )
+                        )
                       ) : (
                         <p>Order Not Found</p>
                       )

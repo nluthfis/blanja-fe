@@ -47,7 +47,6 @@ function MyOrder() {
       .then((result) => {
         setLoading(false);
         setOrder(result?.data?.data);
-        console.log(result?.data?.data);
         getProductsByIds(result?.data?.data);
       })
       .catch((err) => {
@@ -94,10 +93,11 @@ function MyOrder() {
   };
 
   const groupedOrders = groupProductsByTransaction(order);
-  console.log(groupedOrders);
 
   const handlePayment = (transactionToken) => {
-    window.snap.pay(transactionToken);
+    console.log(transactionToken);
+    const redirectUrl = `https://app.sandbox.midtrans.com/snap/v3/redirection/${transactionToken}#/bank-transfer`;
+    window.location.href = redirectUrl;
   };
 
   return (
@@ -121,7 +121,10 @@ function MyOrder() {
                       Object.keys(groupedOrders).length > 0 ? (
                         Object.entries(groupedOrders).map(
                           ([token, products], index) => (
-                            <li key={index}>
+                            <li
+                              key={index}
+                              onClick={() => handlePayment(token)}
+                            >
                               <>
                                 {/* Display products for the current token */}
                                 {products.map((product, productIndex) => (

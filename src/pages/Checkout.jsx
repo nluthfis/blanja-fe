@@ -21,7 +21,8 @@ function Checkout() {
   const postal_code = useRef();
   const city = useRef();
   const [order, setOrder] = useState([]);
-
+  const [previousTransactionToken, setPreviousTransactionToken] =
+    useState(null);
   let totalPrice = 0;
   let totalProduct = 0;
   let totalDelivery = 0;
@@ -45,11 +46,12 @@ function Checkout() {
           `${process.env.REACT_APP_BASE_URL}/order?statusOrder=order_created`
         );
         setOrder(result.data.data);
+        setPreviousTransactionToken(result?.data?.data[0].transaction_token);
+        console.log(result?.data?.data[0].transaction_token);
       } catch (error) {
         console.log(error);
       }
     };
-
     const fetchData = async () => {
       try {
         const result = await axios.get(
@@ -181,8 +183,12 @@ function Checkout() {
         setLoading(false);
         return;
       }
-      if (order[0]?.transaction_token !== null) {
+      if (order[0]?.transaction_token !== null && previousTransactionToken) {
         window.snap.pay(order[0]?.transaction_token);
+        setLoading(false);
+        return;
+      } else if (previousTransactionToken) {
+        window.snap.pay(previousTransactionToken);
         setLoading(false);
         return;
       }
@@ -190,8 +196,9 @@ function Checkout() {
         .post(`${process.env.REACT_APP_BASE_URL}/create-payment`, requestData)
         .then((result) => {
           setLoading(false);
-          console.log(result, "result");
-          window.snap.pay(result?.data?.data?.transactionToken);
+          const transactionToken = result?.data?.data?.transactionToken;
+          setPreviousTransactionToken(transactionToken);
+          window.snap.pay(transactionToken);
         })
         .catch((err) => {
           setLoading(false);

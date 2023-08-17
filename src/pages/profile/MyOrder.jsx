@@ -6,28 +6,48 @@ import "../../style/pages/MyOrder.scss";
 import axios from "axios";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import OrderItem from "../../components/myOrder/OrderItem";
+import OrderItemSkeleton from "../../components/myOrder/OrderItemSkeleton";
 
 function MyOrder() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState([]);
+  const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     if (!localStorage.getItem("auth")) {
       navigate("/login");
     }
-
+    getCart();
     getOrders();
   }, []);
 
+  const getCart = () => {
+    setLoading(true);
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/order?statusOrder=order_created`)
+      .then((result) => {
+        setLoading(false);
+        setCart(result?.data?.data);
+        getProductsByIds(result?.data?.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
   const getOrders = () => {
     setLoading(true);
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/order`)
+      .get(`${process.env.REACT_APP_BASE_URL}/order?statusOrder=pending`)
       .then((result) => {
         setLoading(false);
         setOrder(result?.data?.data);
+        console.log(result?.data?.data);
         getProductsByIds(result?.data?.data);
       })
       .catch((err) => {
@@ -66,66 +86,48 @@ function MyOrder() {
         <div className="page-content ">
           <div className="container-fluid">
             <h4>My order</h4>
+            <Tabs>
+              <TabList className="d-flex ">
+                <Tab className="d-flex w-50">On Process</Tab>
+                <Tab className="d-flex w-50">Cart</Tab>
+              </TabList>
+
+              <TabPanel>
+                <div className="my-order">
+                  <ul>
+                    {!loading ? (
+                      order?.length > 0 ? (
+                        order.map((orderItem, index) => (
+                          <OrderItem key={index} orderItem={orderItem} />
+                        ))
+                      ) : (
+                        <p>Order Not Found</p>
+                      )
+                    ) : (
+                      <OrderItemSkeleton />
+                    )}
+                  </ul>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div className="my-order">
+                  <ul>
+                    {!loading ? (
+                      cart?.length > 0 ? (
+                        cart.map((orderItem, index) => (
+                          <OrderItem key={index} orderItem={orderItem} />
+                        ))
+                      ) : (
+                        <p>Order Not Found</p>
+                      )
+                    ) : (
+                      <OrderItemSkeleton />
+                    )}
+                  </ul>
+                </div>
+              </TabPanel>
+            </Tabs>
             <hr />
-            <div className="my-order">
-              <ul>
-                {!loading ? (
-                  order?.length > 0 ? (
-                    order.map((orderItem, index) => (
-                      <li key={index}>
-                        <>
-                          {orderItem.path
-                            .slice(0, 1)
-                            .map((photo, photoIndex) => (
-                              <img
-                                className="img-responsive object-fit-cover"
-                                src={photo.photo_path}
-                                alt="Product"
-                                key={photoIndex}
-                              />
-                            ))}
-                          <div className="order-details">
-                            <h2>
-                              Order ID: {orderItem.order_id || <Skeleton />}
-                            </h2>
-                            <p>
-                              Product:
-                              {orderItem.product[0].product_name || (
-                                <Skeleton />
-                              )}
-                            </p>
-                            <p>
-                              Quantity:
-                              {orderItem.total_product || <Skeleton />}
-                            </p>
-                            <p>
-                              Harga: {orderItem.total_price || <Skeleton />}
-                            </p>
-                            <p className="success-message">Success</p>
-                          </div>
-                        </>
-                      </li>
-                    ))
-                  ) : (
-                    <p>Order Not Found</p>
-                  )
-                ) : (
-                  <li>
-                    <>
-                      <div className="order-details">
-                        <h2>{<Skeleton width={500} />}</h2>
-                        <p>{<Skeleton width={300} />}</p>
-                        <p>{<Skeleton width={300} />}</p>
-                        <p>{<Skeleton width={300} />}</p>
-                        <p className="success-message">
-                          {<Skeleton width={100} />}
-                        </p>
-                      </div>
-                    </>
-                  </li>
-                )}
-              </ul>
-            </div>
           </div>
         </div>
       </main>

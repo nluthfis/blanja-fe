@@ -181,6 +181,11 @@ function Checkout() {
         setLoading(false);
         return;
       }
+      if (order[0]?.transaction_token !== null) {
+        window.snap.pay(order[0]?.transaction_token);
+        setLoading(false);
+        return;
+      }
       axios
         .post(`${process.env.REACT_APP_BASE_URL}/create-payment`, requestData)
         .then((result) => {
